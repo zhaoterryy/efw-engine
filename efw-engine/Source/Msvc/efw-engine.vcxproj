@@ -73,6 +73,7 @@
     <OutDir>$(SolutionDir)..\..\Lib\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\..\Intermediate\$(ProjectName)-$(PlatformName)$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)-$(PlatformName)$(Configuration)</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,6 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>U:\skool\efw-engine\efw-engine\efw-engine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -123,13 +125,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Actors\Actor.cpp" />
     <ClCompile Include="..\efw-engine\efw-engine.cpp" />
     <ClCompile Include="..\efw-engine\Initialization.cpp" />
+    <ClCompile Include="..\GameFramework\Actor.cpp" />
+    <ClCompile Include="..\GameFramework\Character.cpp" />
+    <ClCompile Include="..\GameFramework\Component\ActorComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\AISystemComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\CollisionComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\InputComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Object.cpp" />
+    <ClCompile Include="..\GameFramework\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Actors\Actor.h" />
+    <ClInclude Include="..\efw-engine\EngineTypes.h" />
     <ClInclude Include="..\efw-engine\Initialization.h" />
+    <ClInclude Include="..\GameFramework\Actor.h" />
+    <ClInclude Include="..\GameFramework\Character.h" />
+    <ClInclude Include="..\GameFramework\Component\ActorComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\AISystemComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\CollisionComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\InputComponent.h" />
+    <ClInclude Include="..\GameFramework\Object.h" />
+    <ClInclude Include="..\GameFramework\World.h" />
+    <ClInclude Include="..\System\Audio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
