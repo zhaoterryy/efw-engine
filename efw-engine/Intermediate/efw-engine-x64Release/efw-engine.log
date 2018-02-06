@@ -1,8 +1,17 @@
 ﻿  efw-engine.cpp
+  Actor.cpp
+  Character.cpp
+  ActorComponent.cpp
+  AISystemComponent.cpp
+  CollisionComponent.cpp
+  InputComponent.cpp
+  Object.cpp
+  World.cpp
   Application.cpp
+  SplashScreen.cpp
   Generating code
-  30 of 30 functions (100.0%) were compiled, the rest were copied from previous compilation.
-    6 functions were new in current compilation
+  34 of 34 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    12 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  efw-engine.vcxproj -> C:\Users\Tech\Desktop\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Release\efw-engine.exe
+  efw-engine.vcxproj -> D:\ogura\skool\GameEngineDev\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Release\efw-engine.exe

@@ -1,16 +1,4 @@
-﻿  Application.cpp
-  World.cpp
-  Object.cpp
-  InputComponent.cpp
-  CollisionComponent.cpp
-  AISystemComponent.cpp
-  ActorComponent.cpp
-  Character.cpp
-  Actor.cpp
-  efw-engine.cpp
-  efw-engine.obj : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
-LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
-  Generating code
-  Finished generating code
-  efw-engine.vcxproj -> C:\Users\Tech\Desktop\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Debug\efw-engine.exe
-  efw-engine.vcxproj -> C:\Users\Tech\Desktop\efw-engine\Game\x64\Debug\efw-engine.pdb (Partial PDB)
+﻿  SplashScreen.cpp
+  Application.cpp
+  Generating Code...
+  efw-engine.vcxproj -> D:\ogura\skool\GameEngineDev\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Debug\efw-engine.exe

@@ -42,8 +42,11 @@
     <ClCompile Include="..\efw-engine\efw-engine.cpp">
       <Filter>efw-engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\efw-engine\Initialization.cpp">
-      <Filter>efw-engine</Filter>
+    <ClCompile Include="..\System\Application.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\SplashScreen.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,8 +80,11 @@
     <ClInclude Include="..\efw-engine\EngineTypes.h">
       <Filter>efw-engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\efw-engine\Initialization.h">
-      <Filter>efw-engine</Filter>
+    <ClInclude Include="..\System\Application.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\SplashScreen.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

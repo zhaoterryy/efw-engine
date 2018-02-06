@@ -1,15 +1,17 @@
 #include "Application.h"
 
-Engine::EGameState Engine::GameState;
-sf::RenderWindow Engine::RenderWindow;
+GEngine* GEngine::Instance;
 
-void Engine::StartGameLoop()
+void GEngine::StartGameLoop()
 {
-	if (GameState != INITIALIZED)
+	if (GameState != EGameState::INITIALIZED)
+	{
 		return;
+	}
 
 	RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
-	GameState = PLAYING;
+	GameState = EGameState::SPLASH_SCREEN;
+	SplashScreen.Show(RenderWindow);
 
 	while (!IsExiting())
 	{
@@ -19,17 +21,21 @@ void Engine::StartGameLoop()
 	RenderWindow.close();
 }
 
-void Engine::Initialize()
+void GEngine::Initialize()
 {
-	//RenderWindow = new sf::RenderWindow();
-	GameState = INITIALIZED;
+	GameState = EGameState::INITIALIZED;
 }
 
-bool Engine::IsExiting()
+GEngine::EGameState GEngine::GetGameState()
+{
+	return GameState;
+}
+
+bool GEngine::IsExiting()
 {
 	return false;
 }
 
-void Engine::GameLoop()
+void GEngine::GameLoop()
 {
 }
