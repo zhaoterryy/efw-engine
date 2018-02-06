@@ -1,0 +1,10 @@
+﻿  Actor.cpp
+  ActorComponent.cpp
+  AISystemComponent.cpp
+  InputComponent.cpp
+  Object.cpp
+  World.cpp
+  Generating code
+  All 26 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  efw-engine.vcxproj -> C:\Users\Tech\Desktop\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Release\efw-engine.exe
