@@ -96,6 +96,10 @@
       <PrecompiledHeaderFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\Lib\SFML-2.4.2\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -139,7 +143,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\efw-engine\efw-engine.cpp" />
-    <ClCompile Include="..\efw-engine\Initialization.cpp" />
     <ClCompile Include="..\GameFramework\Actor.cpp" />
     <ClCompile Include="..\GameFramework\Character.cpp" />
     <ClCompile Include="..\GameFramework\Component\ActorComponent.cpp" />
@@ -148,10 +151,10 @@
     <ClCompile Include="..\GameFramework\Component\InputComponent.cpp" />
     <ClCompile Include="..\GameFramework\Object.cpp" />
     <ClCompile Include="..\GameFramework\World.cpp" />
+    <ClCompile Include="..\System\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\efw-engine\EngineTypes.h" />
-    <ClInclude Include="..\efw-engine\Initialization.h" />
     <ClInclude Include="..\GameFramework\Actor.h" />
     <ClInclude Include="..\GameFramework\Character.h" />
     <ClInclude Include="..\GameFramework\Component\ActorComponent.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="..\GameFramework\Component\InputComponent.h" />
     <ClInclude Include="..\GameFramework\Object.h" />
     <ClInclude Include="..\GameFramework\World.h" />
+    <ClInclude Include="..\System\Application.h" />
     <ClInclude Include="..\System\Audio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

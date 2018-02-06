@@ -1,10 +1,8 @@
-﻿  Actor.cpp
-  ActorComponent.cpp
-  AISystemComponent.cpp
-  InputComponent.cpp
-  Object.cpp
-  World.cpp
+﻿  efw-engine.cpp
+  Application.cpp
   Generating code
-  All 26 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  30 of 30 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    6 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   efw-engine.vcxproj -> C:\Users\Tech\Desktop\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Release\efw-engine.exe
