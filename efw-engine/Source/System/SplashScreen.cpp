@@ -5,7 +5,7 @@ void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 {
 	sf::Texture Image;
 
-	if (Image.loadFromFile("images/SplashScreen.png") != true)
+	if (Image.loadFromFile("Images/SplashScreen.png") != true)
 		return;
 
 	sf::Sprite Sprite(Image);
