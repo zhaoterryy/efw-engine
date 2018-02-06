@@ -1,6 +1,9 @@
 *.opendb
+
 *.tlog
+
 *.pdb
-*.vcxproj.filters
+
 .vs
+
 *.idb
