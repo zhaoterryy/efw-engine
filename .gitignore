@@ -1,11 +1,8 @@
 *.opendb
-
 *.tlog
-
 *.pdb
-
 .vs
-
 *.idb
-
 *.DS_Store
+*.obj
+*.o
