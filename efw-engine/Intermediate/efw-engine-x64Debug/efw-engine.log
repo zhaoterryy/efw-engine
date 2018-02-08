@@ -1,4 +1,11 @@
-﻿  SplashScreen.cpp
-  Application.cpp
+﻿  Actor.cpp
   Generating Code...
-  efw-engine.vcxproj -> D:\ogura\skool\GameEngineDev\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Debug\efw-engine.exe
+  Compiling...
+  World.cpp
+  Object.cpp
+  InputComponent.cpp
+  ActorComponent.cpp
+  AISystemComponent.cpp
+  Generating Code...
+  efw-engine.vcxproj -> C:\Users\GABE\Desktop\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Debug\efw-engine.exe
+  efw-engine.vcxproj -> C:\Users\GABE\Desktop\efw-engine\Game\x64\Debug\efw-engine.pdb (Partial PDB)
