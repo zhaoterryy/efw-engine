@@ -7,3 +7,5 @@
 .vs
 
 *.idb
+
+*.DS_Store

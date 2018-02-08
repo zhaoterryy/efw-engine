@@ -10,8 +10,8 @@
   Application.cpp
   SplashScreen.cpp
   Generating code
-  34 of 34 functions (100.0%) were compiled, the rest were copied from previous compilation.
-    12 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  66 of 89 functions (74.2%) were compiled, the rest were copied from previous compilation.
+    56 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   efw-engine.vcxproj -> D:\ogura\skool\GameEngineDev\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Release\efw-engine.exe

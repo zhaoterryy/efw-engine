@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "SplashScreen.h"
+#include "sol.hpp"
 
 class GEngine
 {
@@ -27,6 +28,7 @@ public:
 	void Initialize();
 
 	EGameState GetGameState();
+	void SetMsPerTick(int InMsPerTick);
 
 private:
 	// Only allow internal ctor & dtor
@@ -37,13 +39,19 @@ private:
 	GEngine(const GEngine&);
 	GEngine& operator=(const GEngine&);
 
-	// static instance
-	static GEngine* Instance;
+	void InitLua();
 
 	bool IsExiting();
 	void GameLoop();
 
+private:
+	// static instance
+	static GEngine* Instance;
+
 	EGameState GameState;
 	sf::RenderWindow RenderWindow;
+	sol::state lua;
 	SplashScreen SplashScreen;
+	int MsPerTick;
+	float DeltaTime;
 };

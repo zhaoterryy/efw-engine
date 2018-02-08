@@ -1,5 +1,20 @@
 #pragma once
 
+// 2-dimensional vector
+struct FVector
+{
+	float X;
+	float Y;
+
+	FVector() : X(0.0f), Y(0.0f) {}
+	FVector(float InX, float InY) : X(InX), Y(InY) {}
+
+	FVector(float Value)
+	{
+		X = Y = Value;
+	}
+};
+
 struct FVector3
 {
 	float X;
