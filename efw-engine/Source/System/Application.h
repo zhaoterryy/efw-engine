@@ -53,4 +53,5 @@ private:
 	sol::state lua;
 	SplashScreen SplashScreen;
 	int MsPerTick;
+	float DeltaTime;
 };

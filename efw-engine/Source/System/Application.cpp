@@ -39,8 +39,7 @@ void GEngine::StartGameLoop()
 
 		while (!IsExiting() && Delay >= dMsPerTick)
 		{
-			long long DeltaTime = (Delay.count() / 1000000000);
-			std::cout << DeltaTime << std::endl;
+			DeltaTime = ((float)Delay.count() / 1000000000);
 			Delay -= dMsPerTick;
 			GameLoop();
 		}
@@ -88,6 +87,50 @@ void GEngine::InitLua()
 	{
 		std::cerr << err.what();
 		std::exit(EXIT_FAILURE);
+	}
+
+	// get "worlds" from lua
+	sol::table worldsTable_s = lua["worlds"];
+	std::vector<sol::table> worldsTable;
+
+	worldsTable_s.for_each([&worldsTable, worldsTable_s](auto key, auto value)
+	{
+		worldsTable.push_back(worldsTable_s.get<sol::table>(key));
+	});
+
+	for (const auto& wt : worldsTable)
+	{
+		std::string worldName = wt.get<std::string>("name");
+
+		// get entities table
+		sol::table entitiesTable = wt["entities"];
+
+		for (const auto& entity : entitiesTable)
+		{
+			// get current entity table
+			sol::table et = entitiesTable.get<sol::table>(entity.first);
+			// check if name is valid
+			sol::optional<std::string> name = et["name"];
+			if (name != sol::nullopt)
+			{
+				std::cout << "Entity: " << name.value() << std::endl;
+			}
+
+			// check if there are any components
+			sol::optional<sol::table> componentsTable = et["components"];
+			if (componentsTable != sol::nullopt)
+			{
+				sol::optional<sol::table> actorCompTable = componentsTable.value()["actorComponent"];
+				if (actorCompTable != sol::nullopt)
+				{
+					// create ActorComponent here
+					FVector v = actorCompTable->get<FVector>("Location");
+					std::cout << "Test vector X: " << v.X << std::endl;
+					std::cout << "Test vector Y: " << v.Y << std::endl;
+				}
+
+			}
+		}
 	}
 }
 
