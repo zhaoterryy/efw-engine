@@ -39,7 +39,7 @@ void GEngine::StartGameLoop()
 
 		while (!IsExiting() && Delay >= dMsPerTick)
 		{
-			long long DeltaTime = (Delay.count() / 1000000);
+			long long DeltaTime = (Delay.count() / 1000000000);
 			std::cout << DeltaTime << std::endl;
 			Delay -= dMsPerTick;
 			GameLoop();
@@ -69,7 +69,6 @@ void GEngine::SetMsPerTick(int InMsPerTick)
 void GEngine::InitLua()
 {
 	lua.open_libraries();
-
 	{
 		// usertype FVector
 		sol::constructors<FVector(), void(), void(float, float)> ctor;
@@ -83,6 +82,7 @@ void GEngine::InitLua()
 	try
 	{
 		lua.script_file("Scripts/test.lua");
+		std::cout << "hello!" << std::endl;
 	}
 	catch (const sol::error& err)
 	{

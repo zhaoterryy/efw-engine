@@ -10,7 +10,6 @@ void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 
 	sf::Sprite Sprite(Image);
 
-
 	RenderWindow.draw(Sprite);
 	RenderWindow.display();
 

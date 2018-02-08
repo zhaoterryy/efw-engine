@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "command": "g++",
+    "type": "shell",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cd",
+            "args": [
+                "${workspaceRoot}/Intermediate/efw-engine-osx",
+                ";g++",
+                "-c", "${workspaceRoot}/Source/efw-engine/*.cpp",
+                "-c", "${workspaceRoot}/Source/System/*.cpp",
+                "-I${workspaceRoot}/Lib/SFML-2.4.2/include",
+                "-I${workspaceRoot}/Lib/sol/include",
+                "-I${workspaceRoot}/Lib/lua53/include",
+                "-I${workspaceRoot}/Source",
+                "-std=c++1z",
+                ";g++",
+                "*.o",
+                "-o",
+                "efw-engine",
+                "-L${workspaceRoot}/Lib/SFML-2.4.2-osx-clang/lib",
+                "-L${workspaceRoot}/Lib/lua53/lib",
+                "-llua53", "-lsfml-graphics", "-lsfml-window", "-lsfml-system",
+                "-Wl,-rpath,${workspaceRoot}/Lib/SFML-2.4.2-osx-clang/lib",
+                ";mv", "efw-engine", "${workspaceRoot}/../Game/osx/efw-engine"    
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}
