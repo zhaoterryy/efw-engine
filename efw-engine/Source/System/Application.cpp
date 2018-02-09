@@ -20,15 +20,35 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
- 	RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
+ 	//RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	GameState = EGameState::SPLASH_SCREEN;
- 	SplashScreen.Show(RenderWindow);
+ 	//SplashScreen.Show(RenderWindow);
 
 	using namespace std::chrono;
 
 	auto Previous = high_resolution_clock::now();
 	auto dMsPerTick = nanoseconds(milliseconds(MsPerTick));
 	auto Delay = duration_values<duration<long, std::nano>>::zero();
+
+	testScene = new World();
+	testObj1 = new Object(FVector3(7, 7, 0), FRotator(), FVector3());
+	testObj2 = new Object(FVector3(3, 3, 0), FRotator(), FVector3());
+	testScene->AddObject(testObj1);
+	testScene->AddObject(testObj2);
+	testScene->Tick(0);
+	
+	std::cout << "\nObj1 WorTrans : ";
+	testObj1->GetWorldTransform().PrintPosition();
+	std::cout << "\nObj2 WorTrans : ";
+	testObj2->GetWorldTransform().PrintPosition();
+
+	testObj1->AddChild(testObj2);
+	testScene->Tick(0);
+
+	std::cout << "\nObj1 WorTrans : ";
+	testObj1->GetWorldTransform().PrintPosition();
+	std::cout << "\nObj2 WorTrans : ";
+	testObj2->GetWorldTransform().PrintPosition();
 
 	while (!IsExiting())
 	{
@@ -37,7 +57,7 @@ void GEngine::StartGameLoop()
 		Previous = Current;
 		Delay += Elapsed;
 
-		while (!IsExiting() && Delay >= dMsPerTick)
+		if (!IsExiting() && Delay >= dMsPerTick)
 		{
 			DeltaTime = ((float)Delay.count() / 1000000000);
 			Delay -= dMsPerTick;
@@ -45,7 +65,7 @@ void GEngine::StartGameLoop()
 		}
 	}
 
-	RenderWindow.close();
+	//RenderWindow.close();
 }
 
 void GEngine::Initialize()

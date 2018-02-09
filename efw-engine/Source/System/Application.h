@@ -2,6 +2,8 @@
 #include "SFML/Graphics.hpp"
 #include "SplashScreen.h"
 #include "sol.hpp"
+#include "../GameFramework/World.h"
+#include "../GameFramework/Object.h"
 
 class GEngine
 {
@@ -54,4 +56,8 @@ private:
 	SplashScreen SplashScreen;
 	int MsPerTick;
 	float DeltaTime;
+
+	World* testScene;
+	Object* testObj1;
+	Object* testObj2;
 };

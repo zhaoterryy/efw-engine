@@ -1,8 +1,19 @@
 #pragma once
 
-#include "Object.h"
+#include <vector>
 
-class World : public Object
+class World
 {
+
+public:
+	World();
+
+	virtual void Tick(float DeltaTime);
+	
+public:
+	void AddObject(class Object* obj);
+
+protected:
+	std::vector<Object*> SceneElements;
 
 };

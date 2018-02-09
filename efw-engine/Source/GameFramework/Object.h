@@ -9,6 +9,10 @@ class Object
 public:
 	Object();
 
+	Object(FTransform trans);
+
+	Object(FVector3 pos, FRotator rot, FVector3 scl);
+
 	virtual void Tick(float DeltaTime);
 
 

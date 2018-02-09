@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 // 2-dimensional vector
 struct FVector
@@ -75,5 +76,33 @@ struct FTransform
 		transform.Rotation = this->Rotation + trans.Rotation;
 		transform.Scale = this->Scale + trans.Scale;
 		return transform;
+	}
+
+	void PrintTransform()
+	{
+		PrintPosition();
+		PrintRotation();
+		PrintScale();
+	}
+
+	void PrintPosition()
+	{
+		std::cout << "\nPosition.X : " << Position.X;
+		std::cout << "\nPosition.Y : " << Position.Y;
+		std::cout << "\nPosition.Z : " << Position.Z;
+	}
+
+	void PrintRotation()
+	{
+		std::cout << "\nRotation.Pitch : " << Rotation.Pitch;
+		std::cout << "\nRotation.Yaw : " << Rotation.Yaw;
+		std::cout << "\nRotation.Roll : " << Rotation.Roll;
+	}
+
+	void PrintScale()
+	{
+		std::cout << "\nScale.X : " << Scale.X;
+		std::cout << "\nScale.Y : " << Scale.Y;
+		std::cout << "\nScale.Z : " << Scale.Z;
 	}
 };
