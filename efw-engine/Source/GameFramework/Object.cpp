@@ -1,21 +1,21 @@
 #include "Object.h"
 
-Object::Object()
+Object::Object(Object* InParent /*= nullptr*/)
 {
-	Object(FVector3(), FRotator(), FVector3());
+	Object(FVector(), 0.0f, FVector(), InParent);
 }
 
-Object::Object(FTransform trans)
+Object::Object(FTransform InTransform, Object* InParent /*= nullptr*/)
 {
-	Object(trans.Position, trans.Rotation, trans.Scale);
+	Object(InTransform.Position, InTransform.Rotation, InTransform.Scale);
 }
 
-Object::Object(FVector3 pos, FRotator rot, FVector3 scl)
+Object::Object(FVector InPos, float InRot, FVector InScale, Object* InParent /*= nullptr*/)
 {
-	Parent = nullptr;
-	RelativeTransform.Position = pos;
-	RelativeTransform.Rotation = rot;
-	RelativeTransform.Scale = scl;
+	Parent = InParent;
+	RelativeTransform.Position = InPos;
+	RelativeTransform.Rotation = InRot;
+	RelativeTransform.Scale = InScale;
 }
 
 void Object::Tick(float DeltaTime)
@@ -43,13 +43,13 @@ FTransform Object::GetWorldTransform() const
 	return WorldTransform;
 }
 
-void Object::SetParent(Object* obj)
+void Object::SetParent(Object* InObj)
 {
-	Parent = obj;
+	Parent = InObj;
 }
 
-void Object::AddChild(Object* obj)
+void Object::AddChild(Object* InObj)
 {
-	Children.push_back(obj);
-	obj->SetParent(this);
+	Children.push_back(InObj);
+	InObj->SetParent(this);
 }

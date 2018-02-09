@@ -11,7 +11,7 @@ public:
 	virtual void Tick(float DeltaTime);
 	
 public:
-	void AddObject(class Object* obj);
+	void AddObject(class Object* Obj);
 
 protected:
 	std::vector<Object*> SceneElements;

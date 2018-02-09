@@ -31,24 +31,20 @@ void GEngine::StartGameLoop()
 	auto Delay = duration_values<duration<long, std::nano>>::zero();
 
 	testScene = new World();
-	testObj1 = new Object(FVector3(7, 7, 0), FRotator(), FVector3());
-	testObj2 = new Object(FVector3(3, 3, 0), FRotator(), FVector3());
+	testObj1 = new Object(FVector(7, 7), 0, FVector());
+	testObj2 = new Object(FVector(3, 3), 0, FVector());
 	testScene->AddObject(testObj1);
 	testScene->AddObject(testObj2);
 	testScene->Tick(0);
 	
-	std::cout << "\nObj1 WorTrans : ";
-	testObj1->GetWorldTransform().PrintPosition();
-	std::cout << "\nObj2 WorTrans : ";
-	testObj2->GetWorldTransform().PrintPosition();
+	std::cout << "\nObj1 WorPos : " << testObj1->GetWorldTransform().Position;
+	std::cout << "\nObj2 WorPos : " << testObj2->GetWorldTransform().Position;
 
 	testObj1->AddChild(testObj2);
 	testScene->Tick(0);
 
-	std::cout << "\nObj1 WorTrans : ";
-	testObj1->GetWorldTransform().PrintPosition();
-	std::cout << "\nObj2 WorTrans : ";
-	testObj2->GetWorldTransform().PrintPosition();
+	std::cout << "\nObj1 WorPos : " << testObj1->GetWorldTransform().Position;
+	std::cout << "\nObj2 WorPos : " << testObj2->GetWorldTransform().Position;
 
 	while (!IsExiting())
 	{

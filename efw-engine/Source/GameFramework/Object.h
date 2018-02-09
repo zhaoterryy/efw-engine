@@ -7,22 +7,21 @@ class Object
 {
 
 public:
-	Object();
+	Object(Object* InParent = nullptr);
 
-	Object(FTransform trans);
+	Object(FTransform InTransform, Object* InParent = nullptr);
 
-	Object(FVector3 pos, FRotator rot, FVector3 scl);
+	Object(FVector InPos, float InRot, FVector InScale, Object* InParent = nullptr);
 
 	virtual void Tick(float DeltaTime);
-
 
 public:
 	void SetRelativeTransform(const FTransform InTransform);
 	FTransform GetRelativeTransform() const;
 	FTransform GetWorldTransform() const;
 
-	void SetParent(Object* obj);
-	void AddChild(Object* obj);
+	void SetParent(Object* InObj);
+	void AddChild(Object* InObj);
 
 protected:
 	FTransform RelativeTransform;
