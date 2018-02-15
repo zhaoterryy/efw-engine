@@ -2,8 +2,8 @@
 #include "SFML/Graphics.hpp"
 #include "SplashScreen.h"
 #include "sol.hpp"
-#include "../GameFramework/World.h"
-#include "../GameFramework/Object.h"
+#include "GameFramework/World.h"
+#include "GameFramework/Object.h"
 
 class GEngine
 {
@@ -11,8 +11,8 @@ public:
 	enum class EGameState
 	{
 		UNINITIALIZED,
-		INITIALIZED,
 		SPLASH_SCREEN,
+		INITIALIZED,
 		PAUSED,
 		MENU_SCREEN,
 		PLAYING,

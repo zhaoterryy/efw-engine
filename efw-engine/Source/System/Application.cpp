@@ -4,6 +4,129 @@
 #include <iostream>
 #include <chrono>
 
+#ifdef _WIN32
+#include <Windows.h>
+#include <direct.h>
+#endif
+
+namespace 
+{
+#ifdef _WIN32
+	bool IsOnlyInstance(const LPCTSTR GameTitle)
+	{
+		HANDLE handle = CreateMutex(NULL, TRUE, GameTitle);
+
+		if (GetLastError() != ERROR_SUCCESS)
+		{
+			HWND hWnd = FindWindow(GameTitle, NULL);
+			if (hWnd)
+			{
+				ShowWindow(hWnd, SW_SHOWNORMAL);
+				SetFocus(hWnd);
+				SetForegroundWindow(hWnd);
+				SetActiveWindow(hWnd);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool CheckStorage(const DWORDLONG DiskSpaceNeeded)
+	{
+		int const Drive = _getdrive();
+		struct _diskfree_t DiskFree;
+
+		_getdiskfree(drive, &DiskFree);
+		
+		unsigned _int64 const NeededClusters = DiskSpaceNeeded / (DiskFree.sectors_per_cluster * DiskFree.bytes_per_sector);
+
+		if (DiskFree.avail_clusters < NeededClusters)
+		{
+			std::cerr << "CheckStorage Error: You do not have enough disk space.";
+			return false;
+		}
+		return true;
+	}
+
+	bool CheckMemory(const DWORDLONG PhysicalRamNeeded, const DWORDLONG VirtualRamNeeded)
+	{
+		MEMORYSTATUSEX Status;
+		GlobalMemoryStatusEx(&Status);
+		if (Status.ullTotalPhys < PhysicalRamNeeded)
+		{
+			std::cerr << "CheckMemory Error: You do not have enough physical memory.";
+			return false;
+		}
+
+		if (Status.ullAvailVirtual < VirtualRamNeeded)
+		{
+			std::cerr << "CheckMemory Error: You do not have enough virtual memory.";
+			return false;
+		}
+
+		char *buff = new char[VirtualRamNeeded];
+		if (buff)
+		{
+			delete[] buff;
+		}
+		else 
+		{
+			std::cerr << "CheckMemory Error: Not enough contiguous memory.";
+			return false;
+		}
+		return true;
+	}
+
+	DWORD ReadCPUSpeed()
+	{
+		DWORD BufSize = sizeof(DWORD);
+		DWORD DwMHz = 0;
+		DWORD Type = REG_DWORD;
+		HKEY HKey;
+
+		long Error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &hKey);
+
+		if (Error == ERROR_SUCCESS)
+		{
+			RegQueryValueEx(HKey, "~MHz", NULL, &type, (LPBYTE)&DwMHz, &BufSize);
+		}
+		return DwMHz;
+	}
+	
+	std::string ReadCPUIdentifier()
+	{
+		DWORD BufSize = sizeof(TCHAR) * 1024;
+		TCHAR StrId[1024];
+		DWORD Type = REG_SZ;
+		HKEY HKey;
+
+		long Error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &hKey);
+
+		if (Error == ERROR_SUCCESS)
+		{
+			RegQueryValueEx(hKey, "ProcessorNameString", NULL, &type, (LPBYTE)&strId, &BufSize);
+		}
+		return std::string(strId);
+	}
+
+	DWORDLONG ReadAvailableRAM()
+	{
+		MEMORYSTATUSEX Status;
+		Status.dwLength = sizeof(Status);
+		GlobalMemoryStatusEx(&status);
+		return status.ullAvailPhys / (1024 * 1024 * 1024);
+	}
+
+	DWORDLONG ReadAvailableVirtualMemory()
+	{
+		MEMORYSTATUSEX Status;
+		Status.dwLength = sizeof(Status);
+		GlobalMemoryStatusEx(&Status);
+		return Status.ullAvailVirtual / (1024 * 1024 * 1024);
+	}
+#endif
+}
+
 GEngine* GEngine::Instance;
 
 void GEngine::StartGameLoop()
@@ -20,9 +143,9 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
- 	//RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
+ 	RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	GameState = EGameState::SPLASH_SCREEN;
- 	//SplashScreen.Show(RenderWindow);
+ 	SplashScreen.Show(RenderWindow);
 
 	using namespace std::chrono;
 

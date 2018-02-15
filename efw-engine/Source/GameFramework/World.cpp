@@ -14,7 +14,7 @@ void World::Tick(float DeltaTime)
 	}
 }
 
-void World::AddObject(class Object* Obj)
+void World::AddObject(Object* Obj)
 {
 	SceneElements.push_back(Obj);
 }
