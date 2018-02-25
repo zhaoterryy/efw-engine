@@ -3,6 +3,7 @@
 #include "efw-engine/EngineTypes.h"
 #include <iostream>
 #include <chrono>
+#include "../Msvc/TransformComponent.h"
 
 GEngine* GEngine::Instance;
 
@@ -30,13 +31,13 @@ void GEngine::StartGameLoop()
 	auto dMsPerTick = nanoseconds(milliseconds(MsPerTick));
 	auto Delay = duration_values<duration<long, std::nano>>::zero();
 
-	testScene = new World();
+	/*testScene = new World();
 	testObj1 = new Object(FVector3(7, 7, 0), FRotator(), FVector3());
 	testObj2 = new Object(FVector3(3, 3, 0), FRotator(), FVector3());
 	testScene->AddObject(testObj1);
 	testScene->AddObject(testObj2);
 	testScene->Tick(0);
-	
+
 	std::cout << "\nObj1 WorTrans : ";
 	testObj1->GetWorldTransform().PrintPosition();
 	std::cout << "\nObj2 WorTrans : ";
@@ -48,7 +49,13 @@ void GEngine::StartGameLoop()
 	std::cout << "\nObj1 WorTrans : ";
 	testObj1->GetWorldTransform().PrintPosition();
 	std::cout << "\nObj2 WorTrans : ";
-	testObj2->GetWorldTransform().PrintPosition();
+	testObj2->GetWorldTransform().PrintPosition();*/
+
+	Object* testObj1 = new Object();
+	TransformComponent* test = testObj1->GetComponent<TransformComponent>();
+	std::cout << (test == nullptr);
+	//testObj1->GetComponent<TransformComponent>()->GetWorldTransform().PrintPosition();
+	//testObj1
 
 	while (!IsExiting())
 	{

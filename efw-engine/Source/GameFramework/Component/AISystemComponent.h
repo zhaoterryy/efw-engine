@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ActorComponent.h"
+#include "..\..\Msvc\BaseComponent.h"
 
-class AISystemComponent : public ActorComponent
+class AISystemComponent : public BaseComponent
 {
 
 };

@@ -154,6 +154,8 @@
     <ClCompile Include="..\GameFramework\World.cpp" />
     <ClCompile Include="..\System\Application.cpp" />
     <ClCompile Include="..\System\SplashScreen.cpp" />
+    <ClCompile Include="BaseComponent.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\efw-engine\EngineTypes.h" />
@@ -168,6 +170,8 @@
     <ClInclude Include="..\System\Application.h" />
     <ClInclude Include="..\System\Audio.h" />
     <ClInclude Include="..\System\SplashScreen.h" />
+    <ClInclude Include="BaseComponent.h" />
+    <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "GameFramework/Object.h"
+#include "..\..\Msvc\BaseComponent.h"
 
-class ActorComponent : public Object
+class ActorComponent : public BaseComponent
 {
 
 };

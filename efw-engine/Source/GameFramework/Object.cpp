@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "..\Msvc\TransformComponent.h"
 
 Object::Object()
 {
@@ -13,34 +14,20 @@ Object::Object(FTransform trans)
 Object::Object(FVector3 pos, FRotator rot, FVector3 scl)
 {
 	Parent = nullptr;
-	RelativeTransform.Position = pos;
-	RelativeTransform.Rotation = rot;
-	RelativeTransform.Scale = scl;
+	Components.insert(new TransformComponent(this, pos, rot, scl));
 }
 
 void Object::Tick(float DeltaTime)
 {
-	if (Parent) {
-		WorldTransform = Parent->GetWorldTransform() + RelativeTransform;
-	}
-	else {
-		WorldTransform = RelativeTransform;
+	for (const auto& comp : Components) {
+		comp->Tick(DeltaTime);
 	}
 }
 
-void Object::SetRelativeTransform(const FTransform InTransform)
+Object* Object::GetParent()
 {
-	RelativeTransform = InTransform;
-}
-
-FTransform Object::GetRelativeTransform() const
-{
-	return RelativeTransform;
-}
-
-FTransform Object::GetWorldTransform() const
-{
-	return WorldTransform;
+	if (Parent) { return Parent; }
+	else { return nullptr; }
 }
 
 void Object::SetParent(Object* obj)

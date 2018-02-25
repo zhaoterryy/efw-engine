@@ -1,8 +1,9 @@
 #pragma once
 
-#include "ActorComponent.h"
+#include "..\..\Msvc\BaseComponent.h"
 
-class InputComponent : public ActorComponent
+
+class InputComponent : public BaseComponent
 {
 
 };
