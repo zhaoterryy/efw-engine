@@ -1,9 +1,8 @@
 #pragma once
 
 #include "efw-engine/EngineTypes.h"
-#include "..\GameFramework\Object.h"
+#include "GameFramework/Object.h"
 #include "BaseComponent.h"
-
 
 class TransformComponent : public BaseComponent
 {

@@ -30,7 +30,6 @@ public:
 	void Initialize();
 
 	EGameState GetGameState();
-	void SetMsPerTick(int InMsPerTick);
 
 private:
 	// Only allow internal ctor & dtor
@@ -44,7 +43,7 @@ private:
 	void InitLua();
 
 	bool IsExiting();
-	void GameLoop();
+	void GameLoop(float DeltaTime);
 
 private:
 	// static instance
@@ -54,8 +53,6 @@ private:
 	sf::RenderWindow RenderWindow;
 	sol::state lua;
 	SplashScreen SplashScreen;
-	int MsPerTick;
-	float DeltaTime;
 
 	World* testScene;
 	Object* testObj1;

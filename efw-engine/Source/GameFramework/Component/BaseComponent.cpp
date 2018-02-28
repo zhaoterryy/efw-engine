@@ -5,9 +5,9 @@ BaseComponent::BaseComponent()
 
 }
 
-BaseComponent::BaseComponent(Object* host)
+BaseComponent::BaseComponent(Object* InHost)
 {
-	Host = host;
+	Host = InHost;
 }
 
 void BaseComponent::Tick(float DeltaTime)

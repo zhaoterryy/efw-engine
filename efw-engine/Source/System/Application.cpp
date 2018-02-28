@@ -3,7 +3,7 @@
 #include "efw-engine/EngineTypes.h"
 #include <iostream>
 #include <chrono>
-#include "../Msvc/TransformComponent.h"
+#include "GameFramework/Component/TransformComponent.h"
 
 GEngine* GEngine::Instance;
 
@@ -15,21 +15,9 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
-	if (MsPerTick == 0)
-	{
-		std::cerr << "StartGameLoop() called before GEngine::MsPerTick was initialized.\n";
-		std::exit(EXIT_FAILURE);
-	}
-
  	//RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	GameState = EGameState::SPLASH_SCREEN;
  	//SplashScreen.Show(RenderWindow);
-
-	using namespace std::chrono;
-
-	auto Previous = high_resolution_clock::now();
-	auto dMsPerTick = nanoseconds(milliseconds(MsPerTick));
-	auto Delay = duration_values<duration<long, std::nano>>::zero();
 
 	/*testScene = new World();
 	testObj1 = new Object(FVector3(7, 7, 0), FRotator(), FVector3());
@@ -51,11 +39,16 @@ void GEngine::StartGameLoop()
 	std::cout << "\nObj2 WorTrans : ";
 	testObj2->GetWorldTransform().PrintPosition();*/
 
-	Object* testObj1 = new Object();
-	TransformComponent* test = testObj1->GetComponent<TransformComponent>();
-	std::cout << (test == nullptr);
+	// Object* testObj1 = new Object();
+	// TransformComponent* test = testObj1->GetComponent<TransformComponent>();
+	// std::cout << (test == nullptr);
 	//testObj1->GetComponent<TransformComponent>()->GetWorldTransform().PrintPosition();
 	//testObj1
+
+	using namespace std::chrono;
+
+	auto Previous = high_resolution_clock::now();
+	auto Delay = duration_values<duration<long, std::nano>>::zero();
 
 	while (!IsExiting())
 	{
@@ -64,12 +57,8 @@ void GEngine::StartGameLoop()
 		Previous = Current;
 		Delay += Elapsed;
 
-		if (!IsExiting() && Delay >= dMsPerTick)
-		{
-			DeltaTime = ((float)Delay.count() / 1000000000);
-			Delay -= dMsPerTick;
-			GameLoop();
-		}
+		GameLoop((float)Delay.count() / 1000000000);
+		Delay = duration_values<duration<long, std::nano>>::zero();
 	}
 
 	//RenderWindow.close();
@@ -78,18 +67,12 @@ void GEngine::StartGameLoop()
 void GEngine::Initialize()
 {
 	InitLua();
-	MsPerTick = 16;
 	GameState = EGameState::INITIALIZED;
 }
 
 GEngine::EGameState GEngine::GetGameState()
 {
 	return GameState;
-}
-
-void GEngine::SetMsPerTick(int InMsPerTick)
-{
-	MsPerTick = InMsPerTick;
 }
 
 void GEngine::InitLua()
@@ -166,6 +149,7 @@ bool GEngine::IsExiting()
 	return false;
 }
 
-void GEngine::GameLoop()
+void GEngine::GameLoop(float DeltaTime)
 {
+	std::cout << std::fixed << DeltaTime << std::endl;
 }

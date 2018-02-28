@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\GameFramework\Object.h"
+class Object;
 
 class BaseComponent
 {
@@ -8,14 +8,14 @@ class BaseComponent
 public:
 	BaseComponent();
 
-	BaseComponent(class Object* host);
+	BaseComponent(Object* InHost);
 
 	virtual void Tick(float DeltaTime);
 
 	Object* GetHost();
 
 protected:
-	class Object* Host;
+	Object* Host;
 
 private:
 

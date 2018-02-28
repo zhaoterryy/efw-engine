@@ -1,20 +1,7 @@
 #include "Object.h"
-#include "..\Msvc\TransformComponent.h"
 
 Object::Object()
 {
-	Object(FVector3(), FRotator(), FVector3());
-}
-
-Object::Object(FTransform trans)
-{
-	Object(trans.Position, trans.Rotation, trans.Scale);
-}
-
-Object::Object(FVector3 pos, FRotator rot, FVector3 scl)
-{
-	Parent = nullptr;
-	Components.insert(new TransformComponent(this, pos, rot, scl));
 }
 
 void Object::Tick(float DeltaTime)
