@@ -1,6 +1,10 @@
 #include "Application.h"
 
 #include "efw-engine/EngineTypes.h"
+#include "GameFramework/Component/TransformComponent.h"
+#include "GameFramework/Scene.h"
+#include "GameFramework/SceneObject.h"
+
 #include <iostream>
 #include <chrono>
 
@@ -131,43 +135,27 @@ GEngine* GEngine::Instance;
 
 void GEngine::StartGameLoop()
 {
-	if (GameState != EGameState::INITIALIZED)
+	if (gameState != EGameState::INITIALIZED)
 	{
 		std::cerr << "StartGameLoop() called before engine was ready.\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	if (MsPerTick == 0)
-	{
-		std::cerr << "StartGameLoop() called before GEngine::MsPerTick was initialized.\n";
-		std::exit(EXIT_FAILURE);
-	}
+ 	//RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
+	gameState = EGameState::SPLASH_SCREEN;
+ 	//SplashScreen.Show(RenderWindow);
 
- 	RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
-	GameState = EGameState::SPLASH_SCREEN;
- 	SplashScreen.Show(RenderWindow);
+	currentScene = new Scene();
+	SceneObject* obj = new SceneObject();
 
+	obj->AddComponent<TransformComponent>();
+	currentScene->AddObject(obj);
+	obj->GetComponent<TransformComponent>()->GetWorldTransform().PrintTransform();
+	
 	using namespace std::chrono;
 
 	auto Previous = high_resolution_clock::now();
-	auto dMsPerTick = nanoseconds(milliseconds(MsPerTick));
 	auto Delay = duration_values<duration<long, std::nano>>::zero();
-
-	testScene = new World();
-	testObj1 = new Object(FVector(7, 7), 0, FVector());
-	testObj2 = new Object(FVector(3, 3), 0, FVector());
-	testScene->AddObject(testObj1);
-	testScene->AddObject(testObj2);
-	testScene->Tick(0);
-	
-	std::cout << "\nObj1 WorPos : " << testObj1->GetWorldTransform().Position;
-	std::cout << "\nObj2 WorPos : " << testObj2->GetWorldTransform().Position;
-
-	testObj1->AddChild(testObj2);
-	testScene->Tick(0);
-
-	std::cout << "\nObj1 WorPos : " << testObj1->GetWorldTransform().Position;
-	std::cout << "\nObj2 WorPos : " << testObj2->GetWorldTransform().Position;
 
 	while (!IsExiting())
 	{
@@ -176,12 +164,8 @@ void GEngine::StartGameLoop()
 		Previous = Current;
 		Delay += Elapsed;
 
-		if (!IsExiting() && Delay >= dMsPerTick)
-		{
-			DeltaTime = ((float)Delay.count() / 1000000000);
-			Delay -= dMsPerTick;
-			GameLoop();
-		}
+		GameLoop((float)Delay.count() / 1000000000);
+		Delay = duration_values<duration<long, std::nano>>::zero();
 	}
 
 	//RenderWindow.close();
@@ -190,18 +174,12 @@ void GEngine::StartGameLoop()
 void GEngine::Initialize()
 {
 	InitLua();
-	MsPerTick = 16;
-	GameState = EGameState::INITIALIZED;
+	gameState = EGameState::INITIALIZED;
 }
 
 GEngine::EGameState GEngine::GetGameState()
 {
-	return GameState;
-}
-
-void GEngine::SetMsPerTick(int InMsPerTick)
-{
-	MsPerTick = InMsPerTick;
+	return gameState;
 }
 
 void GEngine::InitLua()
@@ -278,6 +256,7 @@ bool GEngine::IsExiting()
 	return false;
 }
 
-void GEngine::GameLoop()
+void GEngine::GameLoop(float deltaTime)
 {
+// 	std::cout << std::fixed << deltaTime << std::endl;
 }

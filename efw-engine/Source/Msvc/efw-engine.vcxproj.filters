@@ -15,28 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\GameFramework\Component\ActorComponent.cpp">
-      <Filter>GameFramework\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GameFramework\Component\AISystemComponent.cpp">
-      <Filter>GameFramework\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GameFramework\Component\CollisionComponent.cpp">
-      <Filter>GameFramework\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GameFramework\Component\InputComponent.cpp">
-      <Filter>GameFramework\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GameFramework\Actor.cpp">
-      <Filter>GameFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GameFramework\Character.cpp">
-      <Filter>GameFramework</Filter>
-    </ClCompile>
     <ClCompile Include="..\GameFramework\Object.cpp">
-      <Filter>GameFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GameFramework\World.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="..\efw-engine\efw-engine.cpp">
@@ -48,34 +27,22 @@
     <ClCompile Include="..\System\SplashScreen.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\GameFramework\Component\BaseComponent.cpp">
+      <Filter>GameFramework\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\Component\TransformComponent.cpp">
+      <Filter>GameFramework\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\SceneObject.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\Scene.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\GameFramework\Component\CollisionComponent.h">
-      <Filter>GameFramework\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GameFramework\Component\AISystemComponent.h">
-      <Filter>GameFramework\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GameFramework\Component\ActorComponent.h">
-      <Filter>GameFramework\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GameFramework\Component\InputComponent.h">
-      <Filter>GameFramework\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GameFramework\Actor.h">
-      <Filter>GameFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GameFramework\World.h">
-      <Filter>GameFramework</Filter>
-    </ClInclude>
     <ClInclude Include="..\GameFramework\Object.h">
       <Filter>GameFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\GameFramework\Character.h">
-      <Filter>GameFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\System\Audio.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\efw-engine\EngineTypes.h">
       <Filter>efw-engine</Filter>
@@ -85,6 +52,18 @@
     </ClInclude>
     <ClInclude Include="..\System\SplashScreen.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\Component\BaseComponent.h">
+      <Filter>GameFramework\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\Component\TransformComponent.h">
+      <Filter>GameFramework\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\SceneObject.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\Scene.h">
+      <Filter>GameFramework</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

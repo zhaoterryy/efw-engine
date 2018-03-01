@@ -2,8 +2,8 @@
 #include "SFML/Graphics.hpp"
 #include "SplashScreen.h"
 #include "sol.hpp"
-#include "GameFramework/World.h"
-#include "GameFramework/Object.h"
+
+class Scene;
 
 class GEngine
 {
@@ -21,16 +21,16 @@ public:
 
 	static GEngine& Get()
 	{
-		if (Instance == nullptr)
-			Instance = new GEngine();
+		if (instance == nullptr)
+			instance = new GEngine();
 
-		return *Instance;
+		return *instance;
 	}
+
 	void StartGameLoop();
 	void Initialize();
 
 	EGameState GetGameState();
-	void SetMsPerTick(int InMsPerTick);
 
 private:
 	// Only allow internal ctor & dtor
@@ -44,20 +44,15 @@ private:
 	void InitLua();
 
 	bool IsExiting();
-	void GameLoop();
+	void GameLoop(float deltaTime);
 
 private:
 	// static instance
-	static GEngine* Instance;
+	static GEngine* instance;
 
-	EGameState GameState;
-	sf::RenderWindow RenderWindow;
+	EGameState gameState;
+	sf::RenderWindow renderWindow;
 	sol::state lua;
-	SplashScreen SplashScreen;
-	int MsPerTick;
-	float DeltaTime;
-
-	World* testScene;
-	Object* testObj1;
-	Object* testObj2;
+	SplashScreen splashScreen;
+	Scene* currentScene;
 };

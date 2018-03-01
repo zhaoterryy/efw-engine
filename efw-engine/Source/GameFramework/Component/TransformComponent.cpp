@@ -1,0 +1,47 @@
+#include "TransformComponent.h"
+#include "GameFramework/SceneObject.h"
+
+TransformComponent::TransformComponent(SceneObject* inHost) :
+	BaseComponent(inHost),
+	relativeTransform(FTransform())
+{
+}
+
+TransformComponent::TransformComponent(SceneObject* inHost, FTransform trans) :
+	BaseComponent(inHost),
+	relativeTransform(trans)
+{
+}
+
+TransformComponent::TransformComponent(SceneObject* inHost, FVector3 pos, FRotator rot, FVector3 scl) :
+	BaseComponent(inHost)
+{
+	relativeTransform.Position = pos;
+	relativeTransform.Rotation = rot;
+	relativeTransform.Scale = scl;
+}
+
+void TransformComponent::Tick(float deltaTime)
+{
+	if (host->GetParent() != nullptr) {
+		//WorldTransform = Host->GetParent()->GetComponent<TransformComponent>()->GetWorldTransform() + RelativeTransform;
+	}
+	else {
+		worldTransform = relativeTransform;
+	}
+}
+
+void TransformComponent::SetRelativeTransform(const FTransform transform)
+{
+	relativeTransform = transform;
+}
+
+FTransform TransformComponent::GetRelativeTransform() const
+{
+	return relativeTransform;
+}
+
+FTransform TransformComponent::GetWorldTransform() const
+{
+	return worldTransform;
+}
