@@ -1,44 +1,47 @@
 #include "TransformComponent.h"
+#include "GameFramework/SceneObject.h"
 
-TransformComponent::TransformComponent(Object* host)
+TransformComponent::TransformComponent(SceneObject* inHost) :
+	BaseComponent(inHost),
+	relativeTransform(FTransform())
 {
-	TransformComponent(host, FVector3(), FRotator(), FVector3());
 }
 
-TransformComponent::TransformComponent(Object* host, FTransform trans)
+TransformComponent::TransformComponent(SceneObject* inHost, FTransform trans) :
+	BaseComponent(inHost),
+	relativeTransform(trans)
 {
-	TransformComponent(host, trans.Position, trans.Rotation, trans.Scale);
 }
 
-TransformComponent::TransformComponent(Object* host, FVector3 pos, FRotator rot, FVector3 scl)
+TransformComponent::TransformComponent(SceneObject* inHost, FVector3 pos, FRotator rot, FVector3 scl) :
+	BaseComponent(inHost)
 {
-	Host = host;
-	RelativeTransform.Position = pos;
-	RelativeTransform.Rotation = rot;
-	RelativeTransform.Scale = scl;
+	relativeTransform.Position = pos;
+	relativeTransform.Rotation = rot;
+	relativeTransform.Scale = scl;
 }
 
-void TransformComponent::Tick(float DeltaTime)
+void TransformComponent::Tick(float deltaTime)
 {
-	if (Host->GetParent() != nullptr) {
+	if (host->GetParent() != nullptr) {
 		//WorldTransform = Host->GetParent()->GetComponent<TransformComponent>()->GetWorldTransform() + RelativeTransform;
 	}
 	else {
-		WorldTransform = RelativeTransform;
+		worldTransform = relativeTransform;
 	}
 }
 
-void TransformComponent::SetRelativeTransform(const FTransform InTransform)
+void TransformComponent::SetRelativeTransform(const FTransform transform)
 {
-	RelativeTransform = InTransform;
+	relativeTransform = transform;
 }
 
 FTransform TransformComponent::GetRelativeTransform() const
 {
-	return RelativeTransform;
+	return relativeTransform;
 }
 
 FTransform TransformComponent::GetWorldTransform() const
 {
-	return WorldTransform;
+	return worldTransform;
 }

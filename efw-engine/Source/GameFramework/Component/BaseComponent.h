@@ -1,22 +1,18 @@
 #pragma once
 
-class Object;
+class SceneObject;
 
 class BaseComponent
 {
 
 public:
-	BaseComponent();
+	BaseComponent(SceneObject* inHost);
 
-	BaseComponent(Object* InHost);
+	virtual void Tick(float deltaTime);
 
-	virtual void Tick(float DeltaTime);
-
-	Object* GetHost();
+	SceneObject* GetHost();
 
 protected:
-	Object* Host;
-
-private:
+	SceneObject* host;
 
 };

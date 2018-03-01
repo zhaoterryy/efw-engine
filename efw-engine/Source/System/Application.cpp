@@ -1,50 +1,34 @@
 #include "Application.h"
 
 #include "efw-engine/EngineTypes.h"
+#include "GameFramework/Component/TransformComponent.h"
+#include "GameFramework/Scene.h"
+#include "GameFramework/SceneObject.h"
+
 #include <iostream>
 #include <chrono>
-#include "GameFramework/Component/TransformComponent.h"
 
-GEngine* GEngine::Instance;
+GEngine* GEngine::instance;
 
 void GEngine::StartGameLoop()
 {
-	if (GameState != EGameState::INITIALIZED)
+	if (gameState != EGameState::INITIALIZED)
 	{
 		std::cerr << "StartGameLoop() called before engine was ready.\n";
 		std::exit(EXIT_FAILURE);
 	}
 
  	//RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
-	GameState = EGameState::SPLASH_SCREEN;
+	gameState = EGameState::SPLASH_SCREEN;
  	//SplashScreen.Show(RenderWindow);
 
-	/*testScene = new World();
-	testObj1 = new Object(FVector3(7, 7, 0), FRotator(), FVector3());
-	testObj2 = new Object(FVector3(3, 3, 0), FRotator(), FVector3());
-	testScene->AddObject(testObj1);
-	testScene->AddObject(testObj2);
-	testScene->Tick(0);
+	currentScene = new Scene();
+	SceneObject* obj = new SceneObject();
 
-	std::cout << "\nObj1 WorTrans : ";
-	testObj1->GetWorldTransform().PrintPosition();
-	std::cout << "\nObj2 WorTrans : ";
-	testObj2->GetWorldTransform().PrintPosition();
-
-	testObj1->AddChild(testObj2);
-	testScene->Tick(0);
-
-	std::cout << "\nObj1 WorTrans : ";
-	testObj1->GetWorldTransform().PrintPosition();
-	std::cout << "\nObj2 WorTrans : ";
-	testObj2->GetWorldTransform().PrintPosition();*/
-
-	// Object* testObj1 = new Object();
-	// TransformComponent* test = testObj1->GetComponent<TransformComponent>();
-	// std::cout << (test == nullptr);
-	//testObj1->GetComponent<TransformComponent>()->GetWorldTransform().PrintPosition();
-	//testObj1
-
+	obj->AddComponent<TransformComponent>();
+	currentScene->AddObject(obj);
+	obj->GetComponent<TransformComponent>()->GetWorldTransform().PrintTransform();
+	
 	using namespace std::chrono;
 
 	auto Previous = high_resolution_clock::now();
@@ -67,12 +51,12 @@ void GEngine::StartGameLoop()
 void GEngine::Initialize()
 {
 	InitLua();
-	GameState = EGameState::INITIALIZED;
+	gameState = EGameState::INITIALIZED;
 }
 
 GEngine::EGameState GEngine::GetGameState()
 {
-	return GameState;
+	return gameState;
 }
 
 void GEngine::InitLua()
@@ -149,7 +133,7 @@ bool GEngine::IsExiting()
 	return false;
 }
 
-void GEngine::GameLoop(float DeltaTime)
+void GEngine::GameLoop(float deltaTime)
 {
-	std::cout << std::fixed << DeltaTime << std::endl;
+// 	std::cout << std::fixed << deltaTime << std::endl;
 }

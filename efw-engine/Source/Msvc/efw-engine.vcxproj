@@ -144,34 +144,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\efw-engine\efw-engine.cpp" />
-    <ClCompile Include="..\GameFramework\Actor.cpp" />
-    <ClCompile Include="..\GameFramework\Character.cpp" />
-    <ClCompile Include="..\GameFramework\Component\ActorComponent.cpp" />
-    <ClCompile Include="..\GameFramework\Component\AISystemComponent.cpp" />
-    <ClCompile Include="..\GameFramework\Component\CollisionComponent.cpp" />
-    <ClCompile Include="..\GameFramework\Component\InputComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\BaseComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\TransformComponent.cpp" />
     <ClCompile Include="..\GameFramework\Object.cpp" />
-    <ClCompile Include="..\GameFramework\World.cpp" />
+    <ClCompile Include="..\GameFramework\SceneObject.cpp" />
+    <ClCompile Include="..\GameFramework\Scene.cpp" />
     <ClCompile Include="..\System\Application.cpp" />
     <ClCompile Include="..\System\SplashScreen.cpp" />
-    <ClCompile Include="BaseComponent.cpp" />
-    <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\efw-engine\EngineTypes.h" />
-    <ClInclude Include="..\GameFramework\Actor.h" />
-    <ClInclude Include="..\GameFramework\Character.h" />
-    <ClInclude Include="..\GameFramework\Component\ActorComponent.h" />
-    <ClInclude Include="..\GameFramework\Component\AISystemComponent.h" />
-    <ClInclude Include="..\GameFramework\Component\CollisionComponent.h" />
-    <ClInclude Include="..\GameFramework\Component\InputComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\BaseComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\TransformComponent.h" />
     <ClInclude Include="..\GameFramework\Object.h" />
-    <ClInclude Include="..\GameFramework\World.h" />
+    <ClInclude Include="..\GameFramework\SceneObject.h" />
+    <ClInclude Include="..\GameFramework\Scene.h" />
     <ClInclude Include="..\System\Application.h" />
-    <ClInclude Include="..\System\Audio.h" />
     <ClInclude Include="..\System\SplashScreen.h" />
-    <ClInclude Include="BaseComponent.h" />
-    <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

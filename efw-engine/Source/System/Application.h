@@ -2,8 +2,8 @@
 #include "SFML/Graphics.hpp"
 #include "SplashScreen.h"
 #include "sol.hpp"
-#include "../GameFramework/World.h"
-#include "../GameFramework/Object.h"
+
+class Scene;
 
 class GEngine
 {
@@ -21,11 +21,12 @@ public:
 
 	static GEngine& Get()
 	{
-		if (Instance == nullptr)
-			Instance = new GEngine();
+		if (instance == nullptr)
+			instance = new GEngine();
 
-		return *Instance;
+		return *instance;
 	}
+
 	void StartGameLoop();
 	void Initialize();
 
@@ -43,18 +44,15 @@ private:
 	void InitLua();
 
 	bool IsExiting();
-	void GameLoop(float DeltaTime);
+	void GameLoop(float deltaTime);
 
 private:
 	// static instance
-	static GEngine* Instance;
+	static GEngine* instance;
 
-	EGameState GameState;
-	sf::RenderWindow RenderWindow;
+	EGameState gameState;
+	sf::RenderWindow renderWindow;
 	sol::state lua;
-	SplashScreen SplashScreen;
-
-	World* testScene;
-	Object* testObj1;
-	Object* testObj2;
+	SplashScreen splashScreen;
+	Scene* currentScene;
 };

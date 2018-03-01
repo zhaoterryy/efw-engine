@@ -1,21 +1,18 @@
 #include "BaseComponent.h"
+#include "GameFramework/SceneObject.h"
 
-BaseComponent::BaseComponent()
+BaseComponent::BaseComponent(SceneObject* inHost) :
+	host(inHost)
+{
+	host->AddComponent(this);
+}
+
+void BaseComponent::Tick(float deltaTime)
 {
 
 }
 
-BaseComponent::BaseComponent(Object* InHost)
+SceneObject* BaseComponent::GetHost()
 {
-	Host = InHost;
-}
-
-void BaseComponent::Tick(float DeltaTime)
-{
-
-}
-
-Object* BaseComponent::GetHost()
-{
-	return Host;
+	return host;
 }

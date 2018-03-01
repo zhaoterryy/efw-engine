@@ -8,22 +8,22 @@ class TransformComponent : public BaseComponent
 {
 
 public :
-	TransformComponent(Object* host);
+	TransformComponent(SceneObject* inHost);
 
-	TransformComponent(Object* host, FTransform trans);
+	TransformComponent(SceneObject* inHost, FTransform trans);
 
-	TransformComponent(Object* host, FVector3 pos, FRotator rot, FVector3 scl);
+	TransformComponent(SceneObject* inHost, FVector3 pos, FRotator rot, FVector3 scl);
 
-	virtual void Tick(float DeltaTime);
+	virtual void Tick(float deltaTime) override;
 
-	void SetRelativeTransform(const FTransform InTransform);
+	void SetRelativeTransform(const FTransform transform);
 	FTransform GetRelativeTransform() const;
 	FTransform GetWorldTransform() const;
 
 protected:
-	FTransform RelativeTransform;
+	FTransform relativeTransform;
 
 private:
-	FTransform WorldTransform;
+	FTransform worldTransform;
 
 };
