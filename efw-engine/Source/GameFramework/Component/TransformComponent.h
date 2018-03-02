@@ -12,7 +12,7 @@ public :
 
 	TransformComponent(SceneObject* inHost, FTransform trans);
 
-	TransformComponent(SceneObject* inHost, FVector3 pos, FRotator rot, FVector3 scl);
+	TransformComponent(SceneObject* inHost, FVector pos, float rot, FVector scl);
 
 	virtual void Tick(float deltaTime) override;
 

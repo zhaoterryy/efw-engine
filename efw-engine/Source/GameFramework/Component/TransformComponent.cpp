@@ -13,7 +13,7 @@ TransformComponent::TransformComponent(SceneObject* inHost, FTransform trans) :
 {
 }
 
-TransformComponent::TransformComponent(SceneObject* inHost, FVector3 pos, FRotator rot, FVector3 scl) :
+TransformComponent::TransformComponent(SceneObject* inHost, FVector pos, float rot, FVector scl) :
 	BaseComponent(inHost)
 {
 	relativeTransform.Position = pos;

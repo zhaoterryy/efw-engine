@@ -15,6 +15,9 @@ public:
 public:
 	void AddObject(Object* obj);
 
+	// @test
+	void TestPrintObjectTransforms();
+
 protected:
 	std::vector<Object*> sceneElements;
 };

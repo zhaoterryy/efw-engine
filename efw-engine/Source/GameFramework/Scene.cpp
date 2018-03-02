@@ -1,5 +1,6 @@
 #include "Scene.h"
-#include "Object.h"
+#include "Component/TransformComponent.h"
+#include "SceneObject.h"
 
 Scene::Scene()
 {
@@ -14,7 +15,15 @@ void Scene::Tick(float deltaTime)
 	}
 }
 
-void Scene::AddObject(class Object* obj)
+void Scene::AddObject(Object* obj)
 {
 	sceneElements.push_back(obj);
+}
+
+void Scene::TestPrintObjectTransforms()
+{
+	for (Object* const objItr : sceneElements)
+	{
+		std::cout << reinterpret_cast<SceneObject*>(objItr)->GetComponent<TransformComponent>()->GetWorldTransform();
+	}
 }

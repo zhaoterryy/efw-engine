@@ -1,14 +1,18 @@
 #include "SplashScreen.h"
 #include "Application.h"
+// #include "sol.hpp"
 
 void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 {
-	sf::Texture Image;
+	sf::Texture image;
 
-	if (Image.loadFromFile("Images/SplashScreen.png") != true)
-		return;
+// 	sol::table splashTable = GEngine::GLua()["splash_screen"];
+// 	std::string imagePath = splashTable.get<std::string>("img_path");
 
-	sf::Sprite Sprite(Image);
+// 	if (image.loadFromFile(imagePath) != true)
+// 		return;
+
+	sf::Sprite Sprite(image);
 
 	RenderWindow.draw(Sprite);
 	RenderWindow.display();
