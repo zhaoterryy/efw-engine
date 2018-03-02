@@ -1,5 +1,4 @@
 #include "Application.h"
-
 #include "efw-engine/EngineTypes.h"
 #include "GameFramework/Component/TransformComponent.h"
 #include "GameFramework/Scene.h"
@@ -16,13 +15,13 @@
 namespace 
 {
 #ifdef _WIN32
-	bool IsOnlyInstance(const LPCTSTR GameTitle)
+	bool IsOnlyInstance(const LPCTSTR title)
 	{
-		HANDLE handle = CreateMutex(NULL, TRUE, GameTitle);
+		HANDLE handle = CreateMutex(NULL, TRUE, title);
 
 		if (GetLastError() != ERROR_SUCCESS)
 		{
-			HWND hWnd = FindWindow(GameTitle, NULL);
+			HWND hWnd = FindWindow(title, NULL);
 			if (hWnd)
 			{
 				ShowWindow(hWnd, SW_SHOWNORMAL);
@@ -35,16 +34,16 @@ namespace
 		return true;
 	}
 
-	bool CheckStorage(const DWORDLONG DiskSpaceNeeded)
+	bool IsEnoughDiskSpace(const DWORDLONG diskSpaceNeeded)
 	{
-		int const Drive = _getdrive();
+		int const drive = _getdrive();
 		struct _diskfree_t DiskFree;
 
 		_getdiskfree(drive, &DiskFree);
 		
-		unsigned _int64 const NeededClusters = DiskSpaceNeeded / (DiskFree.sectors_per_cluster * DiskFree.bytes_per_sector);
+		unsigned _int64 const neededClusters = diskSpaceNeeded / (DiskFree.sectors_per_cluster * DiskFree.bytes_per_sector);
 
-		if (DiskFree.avail_clusters < NeededClusters)
+		if (DiskFree.avail_clusters < neededClusters)
 		{
 			std::cerr << "CheckStorage Error: You do not have enough disk space.";
 			return false;
@@ -52,23 +51,23 @@ namespace
 		return true;
 	}
 
-	bool CheckMemory(const DWORDLONG PhysicalRamNeeded, const DWORDLONG VirtualRamNeeded)
+	bool CheckMemory(const DWORDLONG physicalRamNeeded, const DWORDLONG virtualRamNeeded)
 	{
-		MEMORYSTATUSEX Status;
-		GlobalMemoryStatusEx(&Status);
-		if (Status.ullTotalPhys < PhysicalRamNeeded)
+		MEMORYSTATUSEX status;
+		GlobalMemoryStatusEx(&status);
+		if (status.ullTotalPhys < physicalRamNeeded)
 		{
 			std::cerr << "CheckMemory Error: You do not have enough physical memory.";
 			return false;
 		}
 
-		if (Status.ullAvailVirtual < VirtualRamNeeded)
+		if (status.ullAvailVirtual < virtualRamNeeded)
 		{
 			std::cerr << "CheckMemory Error: You do not have enough virtual memory.";
 			return false;
 		}
 
-		char *buff = new char[VirtualRamNeeded];
+		char *buff = new char[virtualRamNeeded];
 		if (buff)
 		{
 			delete[] buff;
@@ -83,55 +82,53 @@ namespace
 
 	DWORD ReadCPUSpeed()
 	{
-		DWORD BufSize = sizeof(DWORD);
-		DWORD DwMHz = 0;
-		DWORD Type = REG_DWORD;
-		HKEY HKey;
+		DWORD bufSize = sizeof(DWORD);
+		DWORD dwMHz = 0;
+		DWORD type = REG_DWORD;
+		HKEY hKey;
 
-		long Error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &hKey);
+		long error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &hKey);
 
-		if (Error == ERROR_SUCCESS)
+		if (error == ERROR_SUCCESS)
 		{
-			RegQueryValueEx(HKey, "~MHz", NULL, &type, (LPBYTE)&DwMHz, &BufSize);
+			RegQueryValueEx(hKey, "~MHz", NULL, &type, (LPBYTE)&dwMHz, &bufSize);
 		}
-		return DwMHz;
+		return dwMHz;
 	}
 	
 	std::string ReadCPUIdentifier()
 	{
-		DWORD BufSize = sizeof(TCHAR) * 1024;
-		TCHAR StrId[1024];
-		DWORD Type = REG_SZ;
-		HKEY HKey;
+		DWORD bufSize = sizeof(TCHAR) * 1024;
+		TCHAR strId[1024];
+		DWORD type = REG_SZ;
+		HKEY hKey;
 
-		long Error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &hKey);
+		long error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_READ, &hKey);
 
-		if (Error == ERROR_SUCCESS)
+		if (error == ERROR_SUCCESS)
 		{
-			RegQueryValueEx(hKey, "ProcessorNameString", NULL, &type, (LPBYTE)&strId, &BufSize);
+			RegQueryValueEx(hKey, "ProcessorNameString", NULL, &type, (LPBYTE)&strId, &bufSize);
 		}
 		return std::string(strId);
 	}
 
 	DWORDLONG ReadAvailableRAM()
 	{
-		MEMORYSTATUSEX Status;
-		Status.dwLength = sizeof(Status);
+		MEMORYSTATUSEX status = { sizeof status };
 		GlobalMemoryStatusEx(&status);
 		return status.ullAvailPhys / (1024 * 1024 * 1024);
 	}
 
 	DWORDLONG ReadAvailableVirtualMemory()
 	{
-		MEMORYSTATUSEX Status;
-		Status.dwLength = sizeof(Status);
-		GlobalMemoryStatusEx(&Status);
-		return Status.ullAvailVirtual / (1024 * 1024 * 1024);
+		MEMORYSTATUSEX status = { sizeof status };
+		GlobalMemoryStatusEx(&status);
+		return status.ullAvailVirtual / (1024 * 1024 * 1024);
 	}
 #endif
 }
 
-GEngine* GEngine::Instance;
+GEngine* GEngine::instance;
 
 void GEngine::StartGameLoop()
 {
@@ -141,16 +138,18 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
- 	//RenderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
+//  	renderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	gameState = EGameState::SPLASH_SCREEN;
- 	//SplashScreen.Show(RenderWindow);
+//  	splashScreen.Show(renderWindow);
 
-	currentScene = new Scene();
 	SceneObject* obj = new SceneObject();
 
 	obj->AddComponent<TransformComponent>();
 	currentScene->AddObject(obj);
-	obj->GetComponent<TransformComponent>()->GetWorldTransform().PrintTransform();
+	obj->SetName("poop");
+// 	std::cout << obj->GetComponent<TransformComponent>()->GetWorldTransform();
+
+	currentScene->TestPrintObjectTransforms();
 	
 	using namespace std::chrono;
 
@@ -173,13 +172,34 @@ void GEngine::StartGameLoop()
 
 void GEngine::Initialize()
 {
+	InitScene();
 	InitLua();
+	CheckMinimumReq();
 	gameState = EGameState::INITIALIZED;
 }
 
-GEngine::EGameState GEngine::GetGameState()
+void GEngine::InitScene()
 {
-	return gameState;
+	currentScene = new Scene();
+}
+
+void GEngine::CheckMinimumReq()
+{
+	if (!IsOnlyInstance(gameTitle.c_str()))
+	{
+		std::cerr << "There is another instance running already.";
+		std::exit(EXIT_FAILURE);
+	}
+
+	if (!IsEnoughDiskSpace(314572800))
+	{
+		std::cerr << "There is not enough disk space to play this game.";
+		std::exit(EXIT_FAILURE);
+	}	
+	
+	std::cout << "RAM: " << ReadAvailableRAM() << " GB" << std::endl;
+	std::cout << "CPU MHz: " << ReadCPUSpeed() << std::endl;
+	std::cout << "CPU Architecture: " << ReadCPUIdentifier() << std::endl;
 }
 
 void GEngine::InitLua()
@@ -193,6 +213,16 @@ void GEngine::InitLua()
 			"y", &FVector::Y
 		);
 		lua.set_usertype("FVector", utype);
+	}
+	{
+		// utype FTransform
+		sol::constructors<FTransform(), void(), void(FVector, float, FVector)> ctor;
+		sol::usertype<FTransform> utype(ctor,
+			"Position", &FTransform::Position,
+			"Rotation", &FTransform::Rotation,
+			"Scale", &FTransform::Scale
+		);
+		lua.set_usertype("FTransform", utype);
 	}
 
 	try
@@ -224,29 +254,49 @@ void GEngine::InitLua()
 
 		for (const auto& entity : entitiesTable)
 		{
+			SceneObject* newObject = new SceneObject();
 			// get current entity table
 			sol::table et = entitiesTable.get<sol::table>(entity.first);
 			// check if name is valid
 			sol::optional<std::string> name = et["name"];
 			if (name != sol::nullopt)
 			{
-				std::cout << "Entity: " << name.value() << std::endl;
+				newObject->SetName(name.value());
 			}
 
 			// check if there are any components
 			sol::optional<sol::table> componentsTable = et["components"];
 			if (componentsTable != sol::nullopt)
 			{
-				sol::optional<sol::table> actorCompTable = componentsTable.value()["actorComponent"];
-				if (actorCompTable != sol::nullopt)
+				componentsTable.value().for_each([newObject](auto key, auto value)
 				{
-					// create ActorComponent here
-					FVector v = actorCompTable->get<FVector>("Location");
-					std::cout << "Test vector X: " << v.X << std::endl;
-					std::cout << "Test vector Y: " << v.Y << std::endl;
-				}
+					if (key.as<std::string>() == "transform")
+					{
+						if (value.is<FTransform>())
+						{
+							TransformComponent* transComp = new TransformComponent(newObject, value.as<FTransform>());
+						}
+						else
+						{
+							sol::optional<sol::table> transTable = value.as<sol::table>();
 
+							if (transTable != sol::nullopt)
+							{
+								FVector p = transTable->get<FVector>("Position");
+								float r = transTable->get<float>("Rotation");
+								FVector s = transTable->get<FVector>("Scale");
+								TransformComponent* transComp = new TransformComponent(newObject, p, r, s);
+							}
+							else
+							{
+								std::cerr << "Error parsing transform component from lua." << std::endl;
+								std::exit(EXIT_FAILURE);
+							}
+						}
+					}
+				});
 			}
+			currentScene->AddObject(newObject);
 		}
 	}
 }
@@ -258,5 +308,6 @@ bool GEngine::IsExiting()
 
 void GEngine::GameLoop(float deltaTime)
 {
+	currentScene->Tick(deltaTime);
 // 	std::cout << std::fixed << deltaTime << std::endl;
 }

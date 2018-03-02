@@ -27,10 +27,17 @@ public:
 		return *instance;
 	}
 
+	static sol::state& GLua()
+	{
+		return Get().lua;
+	}
+
 	void StartGameLoop();
 	void Initialize();
+	void InitScene();
 
-	EGameState GetGameState();
+	inline EGameState GetGameState() { return gameState; }
+
 
 private:
 	// Only allow internal ctor & dtor
@@ -45,14 +52,16 @@ private:
 
 	bool IsExiting();
 	void GameLoop(float deltaTime);
+	void CheckMinimumReq();
 
 private:
 	// static instance
 	static GEngine* instance;
 
 	EGameState gameState;
-	sf::RenderWindow renderWindow;
+	std::string gameTitle;
 	sol::state lua;
+	sf::RenderWindow renderWindow;
 	SplashScreen splashScreen;
 	Scene* currentScene;
 };
