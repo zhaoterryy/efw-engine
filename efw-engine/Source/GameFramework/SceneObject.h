@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "Component/BaseComponent.h"
+#include "Component/TransformComponent.h"
 
 #include <type_traits>
 #include <vector>
@@ -18,7 +19,11 @@ public:
 	T* GetComponent();
 
 	template <class T>
-	T* AddComponent();
+	T& AddComponent();
+
+	template <class T, class ... Vargs>
+	T& AddComponent(Vargs ...);
+
 	void AddComponent(BaseComponent* inComponent);
 
 	inline SceneObject* GetParent() { return parent; }
@@ -48,11 +53,36 @@ T* SceneObject::GetComponent()
 	return nullptr;
 }
 
+template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FVector p, float r, FVector s)
+{
+	return *new TransformComponent(this, p, r, s);
+}
+
+template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FVector p, int r, FVector s)
+{
+	return *new TransformComponent(this, p, (float) r, s);
+}
+
+template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FVector p, double r, FVector s)
+{
+	return *new TransformComponent(this, p, (float) r, s);
+}
+
+template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FTransform transform)
+{
+	return *new TransformComponent(this, transform);
+}
+
 template <class T>
-T* SceneObject::AddComponent()
+T& SceneObject::AddComponent()
 {
 	static_assert(std::is_base_of<BaseComponent, T>::value, "AddComponent<T>(): T must be derived from BaseComponent");
 
-	T* newComponent = new T(this);
-	return newComponent;
+	return *new T(this);
+}
+
+template <class T, class ... Vargs>
+T& SceneObject::AddComponent(Vargs ...)
+{
+	return AddComponent<T>();
 }

@@ -28,3 +28,8 @@ void Scene::TestPrintObjectTransforms()
 		std::cout << reinterpret_cast<SceneObject*>(objItr)->GetComponent<TransformComponent>()->GetWorldTransform();
 	}
 }
+
+void Scene::SetSceneName(std::string inName)
+{
+	name = inName;
+}
