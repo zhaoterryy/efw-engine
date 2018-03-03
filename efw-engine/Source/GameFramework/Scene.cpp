@@ -13,6 +13,7 @@ void Scene::Tick(float deltaTime)
 	{
 		obj->Tick(deltaTime);
 	}
+
 }
 
 void Scene::AddObject(Object* obj)

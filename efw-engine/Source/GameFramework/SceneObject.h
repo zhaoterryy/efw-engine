@@ -18,7 +18,7 @@ public:
 	T* GetComponent();
 
 	template <class T>
-	void AddComponent();
+	T* AddComponent();
 	void AddComponent(BaseComponent* inComponent);
 
 	inline SceneObject* GetParent() { return parent; }
@@ -49,9 +49,10 @@ T* SceneObject::GetComponent()
 }
 
 template <class T>
-void SceneObject::AddComponent()
+T* SceneObject::AddComponent()
 {
 	static_assert(std::is_base_of<BaseComponent, T>::value, "AddComponent<T>(): T must be derived from BaseComponent");
 
 	T* newComponent = new T(this);
+	return newComponent;
 }

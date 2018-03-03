@@ -17,6 +17,9 @@ public :
 	virtual void Tick(float deltaTime) override;
 
 	void SetRelativeTransform(const FTransform transform);
+	void SetRelPosition(FVector pos);
+	void SetRelRotation(float rot);
+	void SetRelScale(FVector scl);
 	FTransform GetRelativeTransform() const;
 	FTransform GetWorldTransform() const;
 

@@ -24,7 +24,7 @@ TransformComponent::TransformComponent(SceneObject* inHost, FVector pos, float r
 void TransformComponent::Tick(float deltaTime)
 {
 	if (host->GetParent() != nullptr) {
-		//WorldTransform = Host->GetParent()->GetComponent<TransformComponent>()->GetWorldTransform() + RelativeTransform;
+		worldTransform = host->GetParent()->GetComponent<TransformComponent>()->GetWorldTransform() + relativeTransform;
 	}
 	else {
 		worldTransform = relativeTransform;
@@ -34,6 +34,21 @@ void TransformComponent::Tick(float deltaTime)
 void TransformComponent::SetRelativeTransform(const FTransform transform)
 {
 	relativeTransform = transform;
+}
+
+void TransformComponent::SetRelPosition(FVector pos)
+{
+	relativeTransform.Position = pos;
+}
+
+void TransformComponent::SetRelRotation(float rot)
+{
+	relativeTransform.Rotation = rot;
+}
+
+void TransformComponent::SetRelScale(FVector scl)
+{
+	relativeTransform.Scale = scl;
 }
 
 FTransform TransformComponent::GetRelativeTransform() const

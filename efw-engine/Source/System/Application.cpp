@@ -143,12 +143,19 @@ void GEngine::StartGameLoop()
 //  	splashScreen.Show(renderWindow);
 
 	SceneObject* obj = new SceneObject();
+	SceneObject* obj2 = new SceneObject();
 
 	obj->AddComponent<TransformComponent>();
-	currentScene->AddObject(obj);
-	obj->SetName("poop");
-// 	std::cout << obj->GetComponent<TransformComponent>()->GetWorldTransform();
+	obj2->AddComponent<TransformComponent>();
 
+	obj->GetComponent<TransformComponent>()->SetRelPosition(FVector(2.0f, 2.0f));
+	obj2->GetComponent<TransformComponent>()->SetRelPosition(FVector(5.0f, 5.0f));
+	obj->AddChild(obj2);
+
+	currentScene->AddObject(obj);
+	currentScene->AddObject(obj2);
+
+	currentScene->Tick(0);
 	currentScene->TestPrintObjectTransforms();
 	
 	using namespace std::chrono;

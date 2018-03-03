@@ -1,23 +1,23 @@
 entities = 
 {
-	beast = 
-	{
-        name = "beast",
-		components = 
-		{
-			transform = FTransform.new
-			(
-				FVector.new(1, 2),
-				0.0,
-				FVector.new(1, 1)
-			)
-			-- transform = 
-			-- {
-                -- Position = FVector.new(1, 2),
-				-- Rotation = 0.0,
-				-- Scale = FVector.new(0, 0)
-            -- }
-		}
-    }
+	-- beast = 
+	-- {
+        -- name = "beast",
+		-- components = 
+		-- {
+			-- transform = FTransform.new
+			-- (
+				-- FVector.new(1, 2),
+				-- 0.0,
+				-- FVector.new(1, 1)
+			-- )
+			-- -- transform = 
+			-- -- {
+                -- -- Position = FVector.new(1, 2),
+				-- -- Rotation = 0.0,
+				-- -- Scale = FVector.new(0, 0)
+            -- -- }
+		-- }
+    -- }
 }
 
