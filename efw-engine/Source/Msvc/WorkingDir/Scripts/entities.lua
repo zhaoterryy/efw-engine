@@ -14,8 +14,8 @@ entities =
 			transform = 
 			{
                 position = FVector.new(1, 2),
-				Rotation = 0.0,
-				Scale = FVector.new(1, 1)
+				rotation = 0.0,
+				scale = FVector.new(1, 2)
             }
 		}
     }

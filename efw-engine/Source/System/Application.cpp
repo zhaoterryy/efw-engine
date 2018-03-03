@@ -249,7 +249,7 @@ void GEngine::InitLua()
 	sol::optional<sol::table> entitiesTbl = sceneTbl.get<sol::table>("entities");
 	if (entitiesTbl != sol::nullopt)
 	{
-		entitiesTbl.value().for_each([&currentScene = currentScene](auto k, auto v)
+		entitiesTbl->for_each([&currentScene = currentScene](auto k, auto v)
 		{
 			SceneObject* newEntity = new SceneObject();
 
@@ -263,9 +263,9 @@ void GEngine::InitLua()
 			sol::optional<sol::table> componentsTbl = entityTbl.get<sol::table>("components");
 			if (componentsTbl != sol::nullopt)
 			{
-				componentsTbl.value().for_each([newEntity](auto comp_k, auto comp_v)
+				componentsTbl->for_each([newEntity](auto comp_k, auto comp_v)
 				{
-					// check for Transform Component
+					// check for Transform->t
 					if (comp_k.template as<std::string>() == "transform")
 					{
 						if (comp_v.template is<FTransform>())
@@ -282,7 +282,7 @@ void GEngine::InitLua()
 								sol::optional<FVector> s = transTable->get<FVector>("scale");
 								if (p != sol::nullopt && r != sol::nullopt && s != sol::nullopt)
 								{
-									newEntity->AddComponent<TransformComponent>(p.value(), r.value(), s.value());
+									newEntity->AddComponent<TransformComponent>(*p, *r, *s);
 								}
 							}
 							else
