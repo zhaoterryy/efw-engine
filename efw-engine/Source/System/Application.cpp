@@ -138,17 +138,17 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
-//  	renderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
+ 	renderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	gameState = EGameState::SPLASH_SCREEN;
-//  	splashScreen.Show(renderWindow);
+ 	splashScreen.Show(renderWindow);
 
 	SceneObject* obj = new SceneObject();
 
-	obj->AddComponent<TransformComponent>();
 	currentScene->AddObject(obj);
+	obj->AddComponent<TransformComponent>(FVector(5), 5, FVector(2));
 	obj->SetName("poop");
-// 	std::cout << obj->GetComponent<TransformComponent>()->GetWorldTransform();
 
+	currentScene->Tick(0);
 	currentScene->TestPrintObjectTransforms();
 	
 	using namespace std::chrono;
@@ -236,18 +236,18 @@ void GEngine::InitLua()
 		std::exit(EXIT_FAILURE);
 	}
 
-	// get "worlds" from lua
-	sol::table worldsTable_s = lua["worlds"];
-	std::vector<sol::table> worldsTable;
+	// get "scenes" from lua
+	sol::table scenesTable_s = lua["scenes"];
+	std::vector<sol::table> scenesTable;
 
-	worldsTable_s.for_each([&worldsTable, worldsTable_s](auto key, auto value)
+	scenesTable_s.for_each([&scenesTable, scenesTable_s](auto key, auto value)
 	{
-		worldsTable.push_back(worldsTable_s.get<sol::table>(key));
+		scenesTable.push_back(scenesTable_s.get<sol::table>(key));
 	});
 
-	for (const auto& wt : worldsTable)
+	for (const auto& wt : scenesTable)
 	{
-		std::string worldName = wt.get<std::string>("name");
+		std::string sceneName = wt.get<std::string>("name");
 
 		// get entities table
 		sol::table entitiesTable = wt["entities"];

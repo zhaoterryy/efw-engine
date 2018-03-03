@@ -1,5 +1,5 @@
 dofile("Scripts/entities.lua")
-worlds = 
+scenes = 
 {
 	main = 
 	{
@@ -7,5 +7,10 @@ worlds =
 	}
 }
 
-worlds.main["entities"] = entities
+splash_screen = 
+{
+	img_path = "images/SplashScreen.png"
+}
+
+scenes.main["entities"] = entities
 entities = nil

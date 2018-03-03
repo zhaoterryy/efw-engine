@@ -6,11 +6,11 @@ void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 {
 	sf::Texture image;
 
-// 	sol::table splashTable = GEngine::GLua()["splash_screen"];
-// 	std::string imagePath = splashTable.get<std::string>("img_path");
+	sol::table splashTable = GEngine::GLua()["splash_screen"];
+	std::string imagePath = splashTable.get<std::string>("img_path");
 
-// 	if (image.loadFromFile(imagePath) != true)
-// 		return;
+	if (image.loadFromFile(imagePath) != true)
+		return;
 
 	sf::Sprite Sprite(image);
 
