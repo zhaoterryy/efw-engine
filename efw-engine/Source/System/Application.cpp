@@ -12,7 +12,7 @@
 #include <direct.h>
 #endif
 
-namespace 
+namespace
 {
 #ifdef _WIN32
 	bool IsOnlyInstance(const LPCTSTR title)
@@ -40,7 +40,7 @@ namespace
 		struct _diskfree_t DiskFree;
 
 		_getdiskfree(drive, &DiskFree);
-		
+
 		unsigned _int64 const neededClusters = diskSpaceNeeded / (DiskFree.sectors_per_cluster * DiskFree.bytes_per_sector);
 
 		if (DiskFree.avail_clusters < neededClusters)
@@ -72,7 +72,7 @@ namespace
 		{
 			delete[] buff;
 		}
-		else 
+		else
 		{
 			std::cerr << "CheckMemory Error: Not enough contiguous memory.";
 			return false;
@@ -95,7 +95,7 @@ namespace
 		}
 		return dwMHz;
 	}
-	
+
 	std::string ReadCPUIdentifier()
 	{
 		DWORD bufSize = sizeof(TCHAR) * 1024;
@@ -138,9 +138,9 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
- 	renderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
+	renderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	gameState = EGameState::SPLASH_SCREEN;
- 	splashScreen.Show(renderWindow);
+	splashScreen.Show(renderWindow);
 
 	SceneObject* obj = new SceneObject();
 
@@ -150,7 +150,8 @@ void GEngine::StartGameLoop()
 
 	currentScene->Tick(0);
 	currentScene->TestPrintObjectTransforms();
-	
+	std::cout << currentScene->GetSceneName();
+
 	using namespace std::chrono;
 
 	auto Previous = high_resolution_clock::now();
@@ -185,6 +186,7 @@ void GEngine::InitScene()
 
 void GEngine::CheckMinimumReq()
 {
+#ifdef _WIN32
 	if (!IsOnlyInstance(gameTitle.c_str()))
 	{
 		std::cerr << "There is another instance running already.";
@@ -195,11 +197,12 @@ void GEngine::CheckMinimumReq()
 	{
 		std::cerr << "There is not enough disk space to play this game.";
 		std::exit(EXIT_FAILURE);
-	}	
-	
+	}
+
 	std::cout << "RAM: " << ReadAvailableRAM() << " GB" << std::endl;
 	std::cout << "CPU MHz: " << ReadCPUSpeed() << std::endl;
 	std::cout << "CPU Architecture: " << ReadCPUIdentifier() << std::endl;
+#endif
 }
 
 void GEngine::InitLua()
@@ -227,7 +230,7 @@ void GEngine::InitLua()
 
 	try
 	{
-		lua.script_file("Scripts/test.lua");
+		lua.script_file("Scripts/main.lua");
 		std::cout << "hello!" << std::endl;
 	}
 	catch (const sol::error& err)
@@ -236,56 +239,51 @@ void GEngine::InitLua()
 		std::exit(EXIT_FAILURE);
 	}
 
-	// get "scenes" from lua
-	sol::table scenesTable_s = lua["scenes"];
-	std::vector<sol::table> scenesTable;
+	// load up scene from table
+	sol::table sceneTbl = lua["scene"];
 
-	scenesTable_s.for_each([&scenesTable, scenesTable_s](auto key, auto value)
+	// get scene name if available
+	currentScene->SetSceneName(sceneTbl.get_or<std::string>("name", "Untitled"));
+
+	// get entities and iterate through if found
+	sol::optional<sol::table> entitiesTbl = sceneTbl.get<sol::table>("entities");
+	if (entitiesTbl != sol::nullopt)
 	{
-		scenesTable.push_back(scenesTable_s.get<sol::table>(key));
-	});
-
-	for (const auto& wt : scenesTable)
-	{
-		std::string sceneName = wt.get<std::string>("name");
-
-		// get entities table
-		sol::table entitiesTable = wt["entities"];
-
-		for (const auto& entity : entitiesTable)
+		entitiesTbl.value().for_each([&currentScene = currentScene](auto k, auto v)
 		{
-			SceneObject* newObject = new SceneObject();
-			// get current entity table
-			sol::table et = entitiesTable.get<sol::table>(entity.first);
-			// check if name is valid
-			sol::optional<std::string> name = et["name"];
-			if (name != sol::nullopt)
-			{
-				newObject->SetName(name.value());
-			}
+			SceneObject* newEntity = new SceneObject();
 
-			// check if there are any components
-			sol::optional<sol::table> componentsTable = et["components"];
-			if (componentsTable != sol::nullopt)
+			// get current entity's properties
+			sol::table entityTbl = v.template as<sol::table>();
+
+			// get entity name if available
+			newEntity->SetName(entityTbl.get_or<std::string>("name", "Untitled"));
+
+			// get components and iterate through if found
+			sol::optional<sol::table> componentsTbl = entityTbl.get<sol::table>("components");
+			if (componentsTbl != sol::nullopt)
 			{
-				componentsTable.value().for_each([newObject](auto key, auto value)
+				componentsTbl.value().for_each([newEntity](auto comp_k, auto comp_v)
 				{
-					if (key.as<std::string>() == "transform")
+					// check for Transform Component
+					if (comp_k.template as<std::string>() == "transform")
 					{
-						if (value.is<FTransform>())
+						if (comp_v.template is<FTransform>())
 						{
-							TransformComponent* transComp = new TransformComponent(newObject, value.as<FTransform>());
+							newEntity->AddComponent<TransformComponent>(comp_v.template as<FTransform>());
 						}
 						else
 						{
-							sol::optional<sol::table> transTable = value.as<sol::table>();
-
+							sol::optional<sol::table> transTable = comp_v.template as<sol::table>();
 							if (transTable != sol::nullopt)
 							{
-								FVector p = transTable->get<FVector>("Position");
-								float r = transTable->get<float>("Rotation");
-								FVector s = transTable->get<FVector>("Scale");
-								TransformComponent* transComp = new TransformComponent(newObject, p, r, s);
+								sol::optional<FVector> p = transTable->get<FVector>("position");
+								sol::optional<float> r = transTable->get<float>("rotation");
+								sol::optional<FVector> s = transTable->get<FVector>("scale");
+								if (p != sol::nullopt && r != sol::nullopt && s != sol::nullopt)
+								{
+									newEntity->AddComponent<TransformComponent>(p.value(), r.value(), s.value());
+								}
 							}
 							else
 							{
@@ -296,8 +294,8 @@ void GEngine::InitLua()
 					}
 				});
 			}
-			currentScene->AddObject(newObject);
-		}
+			currentScene->AddObject(newEntity);
+		});
 	}
 }
 
@@ -309,5 +307,5 @@ bool GEngine::IsExiting()
 void GEngine::GameLoop(float deltaTime)
 {
 	currentScene->Tick(deltaTime);
-// 	std::cout << std::fixed << deltaTime << std::endl;
+	// 	std::cout << std::fixed << deltaTime << std::endl;
 }

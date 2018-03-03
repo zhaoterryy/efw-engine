@@ -12,12 +12,17 @@ public:
 
 	virtual void Tick(float deltaTime);
 	
-public:
 	void AddObject(Object* obj);
 
 	// @test
 	void TestPrintObjectTransforms();
 
+	void SetSceneName(std::string inName);
+	std::string GetSceneName() { return name; }
+
 protected:
 	std::vector<Object*> sceneElements;
+
+private:
+	std::string name;
 };
