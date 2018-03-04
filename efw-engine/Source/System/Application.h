@@ -8,7 +8,10 @@
 #include <stack>
 #include <functional>
 
-class sf::RenderWindow;
+namespace sf
+{
+	class RenderWindow;
+}
 
 class GEngine
 {
