@@ -7,9 +7,9 @@ entities =
 		{
 			transform = 
 			{
-                position = FVector.new(1, 2),
+                position = Vector.new(1, 2),
 				rotation = 0.0,
-				scale = FVector.new(1, 2)
+				scale = Vector.new(1, 2)
             }
 		}
     }

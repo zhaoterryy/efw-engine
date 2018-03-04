@@ -7,7 +7,7 @@
 class TransformComponent : public BaseComponent
 {
 
-public :
+public:
 	TransformComponent(SceneObject* inHost);
 
 	TransformComponent(SceneObject* inHost, FTransform trans);

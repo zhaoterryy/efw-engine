@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "efw-engine/EngineTypes.h"
 #include "GameFramework/Component/TransformComponent.h"
+#include "GameFramework/Component/LuaComponent.h"
 #include "GameFramework/Scene.h"
 #include "GameFramework/SceneObject.h"
 
@@ -214,7 +215,7 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 		newScene->SetSceneName(sceneTbl->get_or<std::string>("name", "Untitled"));
 
 		// get entities and iterate through if found
-		sol::optional<sol::table> entitiesTbl = sceneTbl->get<sol::table>("entities");
+		sol::optional<sol::table> entitiesTbl = sceneTbl->get<sol::table>("entity_list");
 		if (entitiesTbl != sol::nullopt)
 		{
 			entitiesTbl->for_each([&newScene = newScene](auto k, auto v)
@@ -280,23 +281,47 @@ void GEngine::InitLua()
 			"x", &FVector::X,
 			"y", &FVector::Y
 		);
-		lua.set_usertype("FVector", utype);
+		lua.set_usertype("Vector", utype);
 	}
 	{
 		// utype FTransform
 		sol::constructors<FTransform(), void(), void(FVector, float, FVector)> ctor;
 		sol::usertype<FTransform> utype(ctor,
-			"Position", &FTransform::Position,
-			"Rotation", &FTransform::Rotation,
-			"Scale", &FTransform::Scale
+			"position", &FTransform::Position,
+			"rotation", &FTransform::Rotation,
+			"scale", &FTransform::Scale
 		);
-		lua.set_usertype("FTransform", utype);
+		lua.set_usertype("Transform", utype);
+	}
+	{
+		// utype base component
+		lua.new_usertype<LuaComponent>("Component",
+			"tick", &LuaComponent::luaTick,
+			"internal_tick", &LuaComponent::Tick,
+			sol::base_classes, sol::bases<BaseComponent>(),
+			"new", sol::no_constructor
+		);
+	}
+	{
+		// utype transform component
+		sol::constructors<void(SceneObject*), void(SceneObject*, FTransform), void(SceneObject*, FVector, float, FVector)> ctor;
+		sol::usertype<TransformComponent> utype(ctor,
+			"relative_transform", sol::property(&TransformComponent::SetRelativeTransform, &TransformComponent::GetRelativeTransform),
+			"world_transform", sol::property(&TransformComponent::GetWorldTransform),
+			sol::base_classes, sol::bases<BaseComponent>()
+		);
+		lua.set_usertype("TransformComponent", utype);
+	}
+	{
+		// utype scene object
+		lua.new_usertype<SceneObject>("SceneObject",
+			"new_component", &SceneObject::NewLuaComponent
+		);
 	}
 
 	try
 	{
 		lua.script_file("Scripts/main.lua");
-		std::cout << "hello!" << std::endl;
 	}
 	catch (const sol::error& err)
 	{

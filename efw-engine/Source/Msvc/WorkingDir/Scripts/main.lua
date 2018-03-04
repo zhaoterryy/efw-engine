@@ -4,7 +4,7 @@ scenes =
 	main = 
 	{
 		name = "Main",
-		entities = entities
+		entity_list = entities
 	},
 	splash_screen =
 	{
@@ -18,3 +18,9 @@ splash_screen =
 {
 	img_path = "images/SplashScreen.png"
 }
+
+comp = SceneObject.new():new_component()
+function comp:tick()
+	print "hello"
+end
+comp:internal_tick()

@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Component/BaseComponent.h"
 #include "Component/TransformComponent.h"
+#include "Component/LuaComponent.h"
 
 #include <type_traits>
 #include <vector>
@@ -29,6 +30,8 @@ public:
 
 	void SetParent(SceneObject* inObj);
 	void AddChild(SceneObject* inObj);
+
+	LuaComponent& NewLuaComponent();
 
 protected:
 	std::vector<std::unique_ptr<BaseComponent>> components;
@@ -62,4 +65,10 @@ T& SceneObject::AddComponent(Vargs ... args)
 	static_assert(std::is_base_of<BaseComponent, T>::value, "AddComponent<T>(): T must be derived from BaseComponent");
 	components.push_back(std::make_unique<T>(this, args ...));
 	return static_cast<T&>(*components.back());
+}
+
+inline LuaComponent& SceneObject::NewLuaComponent()
+{
+	components.push_back(std::make_unique<LuaComponent>(this));
+	return static_cast<LuaComponent&>(*components.back());
 }
