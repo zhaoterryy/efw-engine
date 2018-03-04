@@ -39,7 +39,9 @@
     <ClCompile Include="..\GameFramework\Scene.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
-    <ClCompile Include="..\GameFramework\Component\LuaComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\LuaComponent.cpp">
+      <Filter>GameFramework\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameFramework\Object.h">

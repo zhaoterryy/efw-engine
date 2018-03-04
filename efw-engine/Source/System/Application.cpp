@@ -176,6 +176,7 @@ void GEngine::Initialize(const char* firstScene)
 {
 	InitLua();
 	sceneStack.push(GetSceneFromLua(firstScene));
+	lua["test"]();
 	CheckMinimumReq();
 	gameState = EGameState::INITIALIZED;
 }
@@ -215,31 +216,32 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 		newScene->SetSceneName(sceneTbl->get_or<std::string>("name", "Untitled"));
 
 		// get entities and iterate through if found
-		sol::optional<sol::table> entitiesTbl = sceneTbl->get<sol::table>("entity_list");
-		if (entitiesTbl != sol::nullopt)
+		sol::optional<sol::table> objectsTbl = sceneTbl->get<sol::table>("object_list");
+		if (objectsTbl != sol::nullopt)
 		{
-			entitiesTbl->for_each([&newScene = newScene](auto k, auto v)
+			sceneTbl->set("objects", sol::new_table());
+			objectsTbl->for_each([&newScene = newScene, &sceneTbl](auto k, auto v)
 			{
-				SceneObject* newEntity = new SceneObject();
+				SceneObject* newObject = new SceneObject();
 
-				// get current entity's properties
-				sol::table entityTbl = v.template as<sol::table>();
+				// get current object's properties
+				sol::table objectTbl = v.template as<sol::table>();
 
-				// get entity name if available
-				newEntity->SetName(entityTbl.get_or<std::string>("name", "Untitled"));
+				// get object name if available
+				newObject->SetName(objectTbl.get_or<std::string>("name", "Untitled"));
 
 				// get components and iterate through if found
-				sol::optional<sol::table> componentsTbl = entityTbl.get<sol::table>("components");
+				sol::optional<sol::table> componentsTbl = objectTbl.get<sol::table>("components");
 				if (componentsTbl != sol::nullopt)
 				{
-					componentsTbl->for_each([newEntity](auto comp_k, auto comp_v)
+					componentsTbl->for_each([newObject](auto comp_k, auto comp_v)
 					{
 						// check for Transform
 						if (comp_k.template as<std::string>() == "transform")
 						{
 							if (comp_v.template is<FTransform>())
 							{
-								newEntity->AddComponent<TransformComponent>(comp_v.template as<FTransform>());
+								newObject->AddComponent<TransformComponent>(comp_v.template as<FTransform>());
 							}
 							else
 							{
@@ -251,7 +253,7 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 									sol::optional<FVector> s = transTable->get<FVector>("scale");
 									if (p != sol::nullopt && r != sol::nullopt && s != sol::nullopt)
 									{
-										newEntity->AddComponent<TransformComponent>(*p, *r, *s);
+										newObject->AddComponent<TransformComponent>(*p, *r, *s);
 									}
 								}
 								else
@@ -263,7 +265,8 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 						}
 					});
 				}
-				newScene->AddObject(newEntity);
+				newScene->AddObject(newObject);
+				sceneTbl.value()["objects"][newObject->GetName()] = newObject;
 			});
 		}
 		return std::unique_ptr<Scene>(newScene);
@@ -274,50 +277,50 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 void GEngine::InitLua()
 {
 	lua.open_libraries();
-	{
-		// usertype FVector
-		sol::constructors<FVector(), void(), void(float, float)> ctor;
-		sol::usertype<FVector> utype(ctor,
-			"x", &FVector::X,
-			"y", &FVector::Y
-		);
-		lua.set_usertype("Vector", utype);
-	}
-	{
-		// utype FTransform
-		sol::constructors<FTransform(), void(), void(FVector, float, FVector)> ctor;
-		sol::usertype<FTransform> utype(ctor,
-			"position", &FTransform::Position,
-			"rotation", &FTransform::Rotation,
-			"scale", &FTransform::Scale
-		);
-		lua.set_usertype("Transform", utype);
-	}
-	{
-		// utype base component
-		lua.new_usertype<LuaComponent>("Component",
-			"tick", &LuaComponent::luaTick,
-			"internal_tick", &LuaComponent::Tick,
-			sol::base_classes, sol::bases<BaseComponent>(),
-			"new", sol::no_constructor
-		);
-	}
-	{
-		// utype transform component
-		sol::constructors<void(SceneObject*), void(SceneObject*, FTransform), void(SceneObject*, FVector, float, FVector)> ctor;
-		sol::usertype<TransformComponent> utype(ctor,
-			"relative_transform", sol::property(&TransformComponent::SetRelativeTransform, &TransformComponent::GetRelativeTransform),
-			"world_transform", sol::property(&TransformComponent::GetWorldTransform),
-			sol::base_classes, sol::bases<BaseComponent>()
-		);
-		lua.set_usertype("TransformComponent", utype);
-	}
-	{
-		// utype scene object
-		lua.new_usertype<SceneObject>("SceneObject",
-			"new_component", &SceneObject::NewLuaComponent
-		);
-	}
+
+	lua.new_usertype<FVector>("Vector",
+		sol::constructors<void(), void(float, float)>(),
+		"x", &FVector::X,
+		"y", &FVector::Y
+	);
+
+	lua.new_usertype<FTransform>("Transform",
+		sol::constructors<void(), void(FVector, float, FVector)>(),
+		"position", &FTransform::Position,
+		"rotation", &FTransform::Rotation,
+		"scale", &FTransform::Scale
+	);
+
+	lua.new_usertype<BaseComponent>("BaseComponent",
+		"new", sol::no_constructor,
+		"internal_tick", &BaseComponent::Tick
+	);
+
+	lua.new_usertype<LuaComponent>("Component",
+		sol::base_classes, sol::bases<BaseComponent>(),
+		"new", sol::no_constructor,
+		"tick", &LuaComponent::luaTick
+	);
+
+	lua.new_usertype<TransformComponent>("TransformComponent",
+		"new", sol::no_constructor,
+		sol::base_classes, sol::bases<BaseComponent>(),
+		"relative_transform", sol::property(&TransformComponent::SetRelativeTransform, &TransformComponent::GetRelativeTransform),
+		"world_transform", sol::property(&TransformComponent::GetWorldTransform)
+	);
+
+	lua.new_usertype<Object>("Object",
+		"name", sol::property(&Object::SetName, &Object::GetName),
+		"new", sol::no_constructor
+	);
+
+	lua.new_usertype<SceneObject>("SceneObject",
+		sol::base_classes, sol::bases<Object>(),
+		"new_component", &SceneObject::Lua_NewComponent,
+		"get_transform_comp", &SceneObject::GetComponent<TransformComponent>,
+		"parent", sol::property(&SceneObject::SetParent, &SceneObject::GetParent),
+		"add_child", &SceneObject::AddChild
+	);
 
 	try
 	{
