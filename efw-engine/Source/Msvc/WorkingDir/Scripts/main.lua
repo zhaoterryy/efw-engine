@@ -1,13 +1,20 @@
 dofile("Scripts/entities.lua")
-scene = 
+scenes = 
 {
-	name = "Main"
+	main = 
+	{
+		name = "Main",
+		entities = entities
+	},
+	splash_screen =
+	{
+		name = "Splash Screen"
+	}
 }
+
+entities = nil
 
 splash_screen = 
 {
 	img_path = "images/SplashScreen.png"
 }
-
-scene["entities"] = entities
-entities = nil

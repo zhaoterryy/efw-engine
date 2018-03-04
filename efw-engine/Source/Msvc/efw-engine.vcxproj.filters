@@ -65,5 +65,8 @@
     <ClInclude Include="..\GameFramework\Scene.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="..\System\ResourceManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

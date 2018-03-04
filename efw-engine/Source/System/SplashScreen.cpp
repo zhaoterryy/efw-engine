@@ -1,6 +1,5 @@
 #include "SplashScreen.h"
 #include "Application.h"
-// #include "sol.hpp"
 
 void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 {

@@ -4,6 +4,7 @@
 #include "GameFramework/Scene.h"
 #include "GameFramework/SceneObject.h"
 
+#include "SFML/Window/Window.hpp"
 #include <iostream>
 #include <chrono>
 
@@ -144,13 +145,14 @@ void GEngine::StartGameLoop()
 
 	SceneObject* obj = new SceneObject();
 
-	currentScene->AddObject(obj);
-	obj->AddComponent<TransformComponent>(FVector(5), 5, FVector(2));
+	GetCurrentScene().AddObject(obj);
+	obj->AddComponent<TransformComponent>(FVector(5), 5.0f, FVector(2));
+	obj->AddComponent<TransformComponent>();
 	obj->SetName("poop");
 
-	currentScene->Tick(0);
-	currentScene->TestPrintObjectTransforms();
-	std::cout << currentScene->GetSceneName();
+	GetCurrentScene().Tick(0);
+	GetCurrentScene().TestPrintObjectTransforms();
+	std::cout << "Scene: " << GetCurrentScene().GetSceneName();
 
 	using namespace std::chrono;
 
@@ -167,21 +169,14 @@ void GEngine::StartGameLoop()
 		GameLoop((float)Delay.count() / 1000000000);
 		Delay = duration_values<duration<long, std::nano>>::zero();
 	}
-
-	//RenderWindow.close();
 }
 
-void GEngine::Initialize()
+void GEngine::Initialize(const char* firstScene)
 {
-	InitScene();
 	InitLua();
+	sceneStack.push(GetSceneFromLua(firstScene));
 	CheckMinimumReq();
 	gameState = EGameState::INITIALIZED;
-}
-
-void GEngine::InitScene()
-{
-	currentScene = new Scene();
 }
 
 void GEngine::CheckMinimumReq()
@@ -203,6 +198,76 @@ void GEngine::CheckMinimumReq()
 	std::cout << "CPU MHz: " << ReadCPUSpeed() << std::endl;
 	std::cout << "CPU Architecture: " << ReadCPUIdentifier() << std::endl;
 #endif
+}
+
+std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
+{
+	// grab all scenes
+	sol::table scenes = lua["scenes"];
+
+	// check if sceneName exists
+	sol::optional<sol::table> sceneTbl = scenes[sceneName];
+	if (sceneTbl != sol::nullopt)
+	{
+		Scene* newScene = new Scene();
+
+		newScene->SetSceneName(sceneTbl->get_or<std::string>("name", "Untitled"));
+
+		// get entities and iterate through if found
+		sol::optional<sol::table> entitiesTbl = sceneTbl->get<sol::table>("entities");
+		if (entitiesTbl != sol::nullopt)
+		{
+			entitiesTbl->for_each([&newScene = newScene](auto k, auto v)
+			{
+				SceneObject* newEntity = new SceneObject();
+
+				// get current entity's properties
+				sol::table entityTbl = v.template as<sol::table>();
+
+				// get entity name if available
+				newEntity->SetName(entityTbl.get_or<std::string>("name", "Untitled"));
+
+				// get components and iterate through if found
+				sol::optional<sol::table> componentsTbl = entityTbl.get<sol::table>("components");
+				if (componentsTbl != sol::nullopt)
+				{
+					componentsTbl->for_each([newEntity](auto comp_k, auto comp_v)
+					{
+						// check for Transform
+						if (comp_k.template as<std::string>() == "transform")
+						{
+							if (comp_v.template is<FTransform>())
+							{
+								newEntity->AddComponent<TransformComponent>(comp_v.template as<FTransform>());
+							}
+							else
+							{
+								sol::optional<sol::table> transTable = comp_v.template as<sol::table>();
+								if (transTable != sol::nullopt)
+								{
+									sol::optional<FVector> p = transTable->get<FVector>("position");
+									sol::optional<float> r = transTable->get<float>("rotation");
+									sol::optional<FVector> s = transTable->get<FVector>("scale");
+									if (p != sol::nullopt && r != sol::nullopt && s != sol::nullopt)
+									{
+										newEntity->AddComponent<TransformComponent>(*p, *r, *s);
+									}
+								}
+								else
+								{
+									std::cerr << "Error parsing transform component from lua." << std::endl;
+									std::exit(EXIT_FAILURE);
+								}
+							}
+						}
+					});
+				}
+				newScene->AddObject(newEntity);
+			});
+		}
+		return std::unique_ptr<Scene>(newScene);
+	}
+	return std::unique_ptr<Scene>(nullptr);
 }
 
 void GEngine::InitLua()
@@ -239,64 +304,6 @@ void GEngine::InitLua()
 		std::exit(EXIT_FAILURE);
 	}
 
-	// load up scene from table
-	sol::table sceneTbl = lua["scene"];
-
-	// get scene name if available
-	currentScene->SetSceneName(sceneTbl.get_or<std::string>("name", "Untitled"));
-
-	// get entities and iterate through if found
-	sol::optional<sol::table> entitiesTbl = sceneTbl.get<sol::table>("entities");
-	if (entitiesTbl != sol::nullopt)
-	{
-		entitiesTbl->for_each([&currentScene = currentScene](auto k, auto v)
-		{
-			SceneObject* newEntity = new SceneObject();
-
-			// get current entity's properties
-			sol::table entityTbl = v.template as<sol::table>();
-
-			// get entity name if available
-			newEntity->SetName(entityTbl.get_or<std::string>("name", "Untitled"));
-
-			// get components and iterate through if found
-			sol::optional<sol::table> componentsTbl = entityTbl.get<sol::table>("components");
-			if (componentsTbl != sol::nullopt)
-			{
-				componentsTbl->for_each([newEntity](auto comp_k, auto comp_v)
-				{
-					// check for Transform->t
-					if (comp_k.template as<std::string>() == "transform")
-					{
-						if (comp_v.template is<FTransform>())
-						{
-							newEntity->AddComponent<TransformComponent>(comp_v.template as<FTransform>());
-						}
-						else
-						{
-							sol::optional<sol::table> transTable = comp_v.template as<sol::table>();
-							if (transTable != sol::nullopt)
-							{
-								sol::optional<FVector> p = transTable->get<FVector>("position");
-								sol::optional<float> r = transTable->get<float>("rotation");
-								sol::optional<FVector> s = transTable->get<FVector>("scale");
-								if (p != sol::nullopt && r != sol::nullopt && s != sol::nullopt)
-								{
-									newEntity->AddComponent<TransformComponent>(*p, *r, *s);
-								}
-							}
-							else
-							{
-								std::cerr << "Error parsing transform component from lua." << std::endl;
-								std::exit(EXIT_FAILURE);
-							}
-						}
-					}
-				});
-			}
-			currentScene->AddObject(newEntity);
-		});
-	}
 }
 
 bool GEngine::IsExiting()
@@ -306,6 +313,6 @@ bool GEngine::IsExiting()
 
 void GEngine::GameLoop(float deltaTime)
 {
-	currentScene->Tick(deltaTime);
+	GetCurrentScene().Tick(deltaTime);
 	// 	std::cout << std::fixed << deltaTime << std::endl;
 }

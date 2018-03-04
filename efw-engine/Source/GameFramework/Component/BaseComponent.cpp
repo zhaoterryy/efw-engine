@@ -4,7 +4,6 @@
 BaseComponent::BaseComponent(SceneObject* inHost) :
 	host(inHost)
 {
-	host->AddComponent(this);
 }
 
 void BaseComponent::Tick(float deltaTime)

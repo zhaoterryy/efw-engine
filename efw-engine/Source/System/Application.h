@@ -1,9 +1,14 @@
 #pragma once
-#include "SFML/Graphics.hpp"
-#include "SplashScreen.h"
-#include "sol.hpp"
 
-class Scene;
+#include "SplashScreen.h"
+#include "GameFramework/Scene.h"
+
+#include "sol.hpp"
+#include <memory>
+#include <stack>
+#include <functional>
+
+class sf::RenderWindow;
 
 class GEngine
 {
@@ -33,11 +38,9 @@ public:
 	}
 
 	void StartGameLoop();
-	void Initialize();
-	void InitScene();
+	void Initialize(const char* firstScene);
 
-	inline EGameState GetGameState() { return gameState; }
-
+	EGameState GetGameState() { return gameState; }
 
 private:
 	// Only allow internal ctor & dtor
@@ -54,6 +57,8 @@ private:
 	void GameLoop(float deltaTime);
 	void CheckMinimumReq();
 
+	std::unique_ptr<Scene> GetSceneFromLua(const char* sceneName);
+
 private:
 	// static instance
 	static GEngine* instance;
@@ -63,5 +68,7 @@ private:
 	sol::state lua;
 	sf::RenderWindow renderWindow;
 	SplashScreen splashScreen;
-	Scene* currentScene;
+	std::stack<std::unique_ptr<Scene>> sceneStack;
+
+	Scene& GetCurrentScene() { return *sceneStack.top(); }
 };

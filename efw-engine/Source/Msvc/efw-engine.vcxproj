@@ -160,6 +160,7 @@
     <ClInclude Include="..\GameFramework\SceneObject.h" />
     <ClInclude Include="..\GameFramework\Scene.h" />
     <ClInclude Include="..\System\Application.h" />
+    <ClInclude Include="..\System\ResourceManager.h" />
     <ClInclude Include="..\System\SplashScreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
