@@ -4,6 +4,7 @@
 #include "GameFramework/Component/LuaComponent.h"
 #include "GameFramework/Scene.h"
 #include "GameFramework/SceneObject.h"
+#include "ResourceManager.h"
 
 #include "SFML/Window/Window.hpp"
 #include <iostream>
@@ -169,7 +170,17 @@ void GEngine::StartGameLoop()
 
 		GameLoop((float)Delay.count() / 1000000000);
 		Delay = duration_values<duration<long, std::nano>>::zero();
+
+		sf::Event event;
+		while (renderWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				renderWindow.close();
+		}
+		renderWindow.clear();
+		splashScreen.Show(renderWindow);
 	}
+
 }
 
 void GEngine::Initialize(const char* firstScene)
@@ -322,6 +333,11 @@ void GEngine::InitLua()
 		"add_child", &SceneObject::AddChild
 	);
 
+	// half assed scene utype
+	lua.new_usertype<Scene>("Scene",
+		"add_object", &Scene::AddObject
+	);
+
 	try
 	{
 		lua.script_file("Scripts/main.lua");
@@ -342,5 +358,5 @@ bool GEngine::IsExiting()
 void GEngine::GameLoop(float deltaTime)
 {
 	GetCurrentScene().Tick(deltaTime);
-	// 	std::cout << std::fixed << deltaTime << std::endl;
+	// std::cout << std::fixed << deltaTime << std::endl;
 }

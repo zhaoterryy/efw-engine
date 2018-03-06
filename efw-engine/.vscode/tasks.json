@@ -39,7 +39,7 @@
                 "echo": false,
                 "reveal": "silent",
                 "focus": false,
-                "panel": "shared"
+                "panel": "new"
             },
             "problemMatcher": "$gcc"
         }

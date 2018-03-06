@@ -28,9 +28,10 @@ function test()
 	local beast = scenes.main.objects.beast
 	local comp = beast:new_component()
 	comp.tick = function(dt)
-		local tc = beast:get_transform_comp()
-		local t = Transform.new(tc.relative_transform.position, tc.relative_transform.rotation + (1 * dt), tc.relative_transform.scale)
-		tc.relative_transform = t
-		print(tc.relative_transform.rotation)
+		print(dt)
+		-- local tc = beast:get_transform_comp()
+		-- local t = Transform.new(tc.relative_transform.position, tc.relative_transform.rotation + (1 * dt), tc.relative_transform.scale)
+		-- tc.relative_transform = t
+		-- print(tc.relative_transform.rotation)
 	end
 end
