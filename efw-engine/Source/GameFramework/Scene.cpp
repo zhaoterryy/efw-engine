@@ -24,6 +24,7 @@ void Scene::TestPrintObjectTransforms()
 {
 	for (Object* const objItr : sceneElements)
 	{
+		std::cout << objItr->GetName() << std::endl;
 		std::cout << reinterpret_cast<SceneObject*>(objItr)->GetComponent<TransformComponent>()->GetWorldTransform();
 	}
 }

@@ -2,7 +2,7 @@ entities =
 {
 	beast = 
 	{
-        name = "beast",
+        name = "BEAST",
 		components = 
 		{
 			transform = 

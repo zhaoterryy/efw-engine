@@ -153,9 +153,9 @@ void GEngine::StartGameLoop()
 	obj->SetName("poop");
 
 	GetCurrentScene().Tick(0);
+	std::cout << "Scene: " << GetCurrentScene().GetSceneName() << std::endl;
 	GetCurrentScene().TestPrintObjectTransforms();
-	std::cout << "Scene: " << GetCurrentScene().GetSceneName();
-
+	
 	using namespace std::chrono;
 
 	auto Previous = high_resolution_clock::now();
@@ -233,13 +233,14 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 			sceneTbl->set("objects", sol::new_table());
 			objectsTbl->for_each([&newScene = newScene, &sceneTbl](auto k, auto v)
 			{
+				std::string id = k.template as<std::string>();
 				SceneObject* newObject = new SceneObject();
 
 				// get current object's properties
 				sol::table objectTbl = v.template as<sol::table>();
 
 				// get object name if available
-				newObject->SetName(objectTbl.get_or<std::string>("name", "Untitled"));
+				newObject->SetName(objectTbl.get_or<std::string>("name", id));
 
 				// get components and iterate through if found
 				sol::optional<sol::table> componentsTbl = objectTbl.get<sol::table>("components");
@@ -277,7 +278,7 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 					});
 				}
 				newScene->AddObject(newObject);
-				sceneTbl.value()["objects"][newObject->GetName()] = newObject;
+				sceneTbl.value()["objects"][id] = newObject;
 			});
 		}
 		return std::unique_ptr<Scene>(newScene);

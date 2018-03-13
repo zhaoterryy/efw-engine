@@ -9,6 +9,13 @@ scenes =
 	splash_screen =
 	{
 		name = "Splash Screen"
+		-- object_list = 
+		-- {
+		-- 	diamond = 
+		-- 	{
+				
+		-- 	}
+		-- }
 	}
 }
 
@@ -28,7 +35,7 @@ function test()
 	local beast = scenes.main.objects.beast
 	local comp = beast:new_component()
 	comp.tick = function(dt)
-		print(dt)
+		-- print(dt)
 		-- local tc = beast:get_transform_comp()
 		-- local t = Transform.new(tc.relative_transform.position, tc.relative_transform.rotation + (1 * dt), tc.relative_transform.scale)
 		-- tc.relative_transform = t

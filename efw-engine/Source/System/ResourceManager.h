@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Resource.h"
 
 #include <unordered_map>
@@ -17,6 +16,7 @@ public:
     bool Load(std::string const& id);
     bool Unload(std::string const& id);
 
+    void AddResource(std::string const& id, std::string const& path);
 private:
     std::unordered_map<std::string, std::unique_ptr<Resource<T>>> resourceMap;
 };
@@ -80,4 +80,15 @@ bool ResourceManager<T>::Unload(std::string const& id)
     }
     
     return false;
+}
+
+template <class T>
+void ResourceManager<T>::AddResource(std::string const& id, std::string const& path) {
+    if (Get(id) != Resource<T>::NULL_RESOURCE)
+    {
+        std::cerr << "AddResource failed, id already exists." << std::endl;
+        return;
+    }
+
+    resourceMap.emplace(id, { path });
 }
