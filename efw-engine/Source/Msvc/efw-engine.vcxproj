@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="..\efw-engine\efw-engine.cpp" />
     <ClCompile Include="..\GameFramework\Component\BaseComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\LuaComponent.cpp" />
     <ClCompile Include="..\GameFramework\Component\TransformComponent.cpp" />
     <ClCompile Include="..\GameFramework\Object.cpp" />
     <ClCompile Include="..\GameFramework\SceneObject.cpp" />
@@ -155,11 +156,13 @@
   <ItemGroup>
     <ClInclude Include="..\efw-engine\EngineTypes.h" />
     <ClInclude Include="..\GameFramework\Component\BaseComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\LuaComponent.h" />
     <ClInclude Include="..\GameFramework\Component\TransformComponent.h" />
     <ClInclude Include="..\GameFramework\Object.h" />
     <ClInclude Include="..\GameFramework\SceneObject.h" />
     <ClInclude Include="..\GameFramework\Scene.h" />
     <ClInclude Include="..\System\Application.h" />
+    <ClInclude Include="..\System\ResourceManager.h" />
     <ClInclude Include="..\System\SplashScreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

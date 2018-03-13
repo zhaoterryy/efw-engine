@@ -1,6 +1,5 @@
 #include "SplashScreen.h"
 #include "Application.h"
-// #include "sol.hpp"
 
 void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 {
@@ -16,16 +15,4 @@ void SplashScreen::Show(sf::RenderWindow& RenderWindow)
 
 	RenderWindow.draw(Sprite);
 	RenderWindow.display();
-
-	sf::Event Event;
-
-	while (RenderWindow.pollEvent(Event))
-	{
-		if (Event.type == sf::Event::KeyPressed
-			|| Event.type == sf::Event::MouseButtonPressed
-			|| Event.type == sf::Event::Closed)
-		{
-			return;
-		}
-	}
 }

@@ -1,13 +1,12 @@
 #pragma once
 
 #include "efw-engine/EngineTypes.h"
-#include "GameFramework/Object.h"
 #include "BaseComponent.h"
 
 class TransformComponent : public BaseComponent
 {
 
-public :
+public:
 	TransformComponent(SceneObject* inHost);
 
 	TransformComponent(SceneObject* inHost, FTransform trans);

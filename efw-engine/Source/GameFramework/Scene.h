@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 class Object;
 
@@ -19,6 +20,9 @@ public:
 
 	void SetSceneName(std::string inName);
 	std::string GetSceneName() { return name; }
+
+	std::vector<Object*>::const_iterator GetElementsBegin() { return sceneElements.begin(); }
+	std::vector<Object*>::const_iterator GetElementsEnd() { return sceneElements.end(); }
 
 protected:
 	std::vector<Object*> sceneElements;

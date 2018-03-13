@@ -1,6 +1,6 @@
 #pragma once
 
-#include "efw-engine/EngineTypes.h"
+#include <string>
 
 class Object
 {

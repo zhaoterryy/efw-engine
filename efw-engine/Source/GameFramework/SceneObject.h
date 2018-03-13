@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Object.h"
-#include "Component/BaseComponent.h"
 #include "Component/TransformComponent.h"
+#include "Component/LuaComponent.h"
 
 #include <type_traits>
 #include <vector>
 #include <unordered_set>
+#include <memory>
 
 class SceneObject : public Object
 {
@@ -22,17 +23,18 @@ public:
 	T& AddComponent();
 
 	template <class T, class ... Vargs>
-	T& AddComponent(Vargs ...);
+	T& AddComponent(Vargs ... args);
 
-	void AddComponent(BaseComponent* inComponent);
+	// adds new lua component and then returns it
+	LuaComponent& Lua_NewComponent();
 
-	inline SceneObject* GetParent() { return parent; }
-
+	SceneObject* GetParent() { return parent; }
 	void SetParent(SceneObject* inObj);
+
 	void AddChild(SceneObject* inObj);
 
 protected:
-	std::vector<BaseComponent*> components;
+	std::vector<std::unique_ptr<BaseComponent>> components;
 
 	SceneObject* parent;
 	std::vector<SceneObject*> children;
@@ -42,47 +44,33 @@ template <class T>
 T* SceneObject::GetComponent()
 {
 	static_assert(std::is_base_of<BaseComponent, T>::value, "GetComponent<T>(): T must be derived from BaseComponent");
-
-	for (const BaseComponent* comp : components)
-	{
+	for (auto& comp : components)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
 		if (typeid(*comp) == typeid(T))
-		{
-			return (T*)comp;
-		}
-	}
+			return static_cast<T*>(&*comp);
+#pragma clang diagnostic pop
 	return nullptr;
-}
-
-template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FVector p, float r, FVector s)
-{
-	return *new TransformComponent(this, p, r, s);
-}
-
-template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FVector p, int r, FVector s)
-{
-	return *new TransformComponent(this, p, (float) r, s);
-}
-
-template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FVector p, double r, FVector s)
-{
-	return *new TransformComponent(this, p, (float) r, s);
-}
-
-template <> inline TransformComponent& SceneObject::AddComponent<TransformComponent>(FTransform transform)
-{
-	return *new TransformComponent(this, transform);
 }
 
 template <class T>
 T& SceneObject::AddComponent()
 {
 	static_assert(std::is_base_of<BaseComponent, T>::value, "AddComponent<T>(): T must be derived from BaseComponent");
-
-	return *new T(this);
+	components.push_back(std::make_unique<T>(this));
+	return static_cast<T&>(*components.back());
 }
 
 template <class T, class ... Vargs>
-T& SceneObject::AddComponent(Vargs ...)
+T& SceneObject::AddComponent(Vargs ... args)
 {
-	return AddComponent<T>();
+	static_assert(std::is_base_of<BaseComponent, T>::value, "AddComponent<T>(): T must be derived from BaseComponent");
+	components.push_back(std::make_unique<T>(this, args ...));
+	return static_cast<T&>(*components.back());
+}
+
+inline LuaComponent& SceneObject::Lua_NewComponent()
+{
+	components.push_back(std::make_unique<LuaComponent>(this));
+	return static_cast<LuaComponent&>(*components.back());
 }
