@@ -24,8 +24,6 @@ public:
 	std::vector<Object*>::const_iterator GetElementsBegin() { return sceneElements.begin(); }
 	std::vector<Object*>::const_iterator GetElementsEnd() { return sceneElements.end(); }
 
-	ResourceManager
-
 protected:
 	std::vector<Object*> sceneElements;
 
