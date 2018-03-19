@@ -159,28 +159,24 @@ void GEngine::StartGameLoop()
 	using namespace std::chrono;
 
 	auto Previous = high_resolution_clock::now();
-	auto Delay = duration_values<duration<long, std::nano>>::zero();
 
 	while (!IsExiting())
 	{
 		auto Current = high_resolution_clock::now();
-		auto Elapsed = Current - Previous;
+		GameLoop((float)(Current - Previous).count() / 1000000000);
 		Previous = Current;
-		Delay += Elapsed;
-
-		GameLoop((float)Delay.count() / 1000000000);
-		Delay = duration_values<duration<long, std::nano>>::zero();
 
 		sf::Event event;
-		while (renderWindow.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				renderWindow.close();
-		}
+		renderWindow.pollEvent(event);
+
+		if (event.type == sf::Event::Closed)
+			exitPressed = true;
+
 		renderWindow.clear();
 		splashScreen.Show(renderWindow);
 	}
 
+	renderWindow.close();
 }
 
 void GEngine::Initialize(const char* firstScene)
@@ -353,7 +349,7 @@ void GEngine::InitLua()
 
 bool GEngine::IsExiting()
 {
-	return false;
+	return exitPressed;
 }
 
 void GEngine::GameLoop(float deltaTime)

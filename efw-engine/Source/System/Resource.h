@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/Audio/SoundBuffer.hpp"
 #include <memory>
 #include <string>
 
@@ -33,25 +34,32 @@ template <class T>
 Resource<T>::Resource(std::string const& path) :
 	filePath(path),
 	isLoaded(false)
-{	
-}
-
-template <>
-Resource<sf::Texture>::Resource(std::string const& path) :
-	filePath(path)
 {
-	if (obj->loadFromFile(path))
-		isLoaded = true;
-
-	std::cerr << "Unable to load texture from: " << path;
-	isLoaded = false;	
 }
 
 template <>
 void Resource<sf::Texture>::Load() 
 {
-	obj->loadFromFile(filePath);
-	isLoaded = true;
+	if (obj->loadFromFile(filePath))
+	{
+		isLoaded = true;
+		return;
+	}
+	
+	std::cerr << "Unable to load texture from: " << filePath;
+	isLoaded = false;
+}
+
+template <>
+void Resource<sf::SoundBuffer>::Load()
+{
+	if (obj->loadFromFile(filePath))
+	{
+		isLoaded = true;
+		return;
+	}
+	std::cerr << "Unable to load sound buffer from: " << filePath;
+	isLoaded = false;
 }
 
 template <class T>

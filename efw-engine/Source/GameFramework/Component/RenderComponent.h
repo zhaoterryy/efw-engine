@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseComponent.h"
+#include <string>
 
 class RenderComponent : public BaseComponent 
 {

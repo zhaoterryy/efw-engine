@@ -73,5 +73,7 @@ private:
 	SplashScreen splashScreen;
 	std::stack<std::unique_ptr<Scene>> sceneStack;
 
+	bool exitPressed;
+
 	Scene& GetCurrentScene() { return *sceneStack.top(); }
 };
