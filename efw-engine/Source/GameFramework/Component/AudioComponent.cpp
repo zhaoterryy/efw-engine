@@ -5,7 +5,7 @@
 
 AudioComponent::AudioComponent(SceneObject* inHost, ResourceManager<sf::SoundBuffer>& soundResource) :
     BaseComponent(inHost),
-    soundResourcesRef(soundResource)
+    soundResourceManager(soundResource)
 {}
 
 void AudioComponent::Tick(float deltaTime) 
@@ -16,10 +16,10 @@ void AudioComponent::Tick(float deltaTime)
 
 void AudioComponent::PlaySound(std::string id) 
 {
-    sf::SoundBuffer buffer;
-    if (soundResourcesRef.Get(id, buffer)) 
+	Resource<sf::SoundBuffer>* buffer = nullptr;
+    if (soundResourceManager.Get(id, buffer)) 
     {
-        sound.setBuffer(buffer);
+		sound.setBuffer(*buffer->GetAsset());
         sound.play();
     }
 }

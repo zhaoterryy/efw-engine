@@ -101,6 +101,7 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -108,7 +109,7 @@
     <Link>
       <MapFileName>$(TargetDir)$(TargetName).map</MapFileName>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\Lib\lua53\lib;$(SolutionDir)..\..\Lib\SFML-2.4.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;opengl32.lib;freetype.lib;jpeg.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies);lua53-static.lib</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;opengl32.lib;openal32.lib;freetype.lib;jpeg.lib;winmm.lib;gdi32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;%(AdditionalDependencies);lua53-static.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -144,24 +145,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\efw-engine\efw-engine.cpp" />
+    <ClCompile Include="..\GameFramework\Component\AudioComponent.cpp" />
     <ClCompile Include="..\GameFramework\Component\BaseComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\ColliderComponent.cpp" />
     <ClCompile Include="..\GameFramework\Component\LuaComponent.cpp" />
+    <ClCompile Include="..\GameFramework\Component\RenderComponent.cpp" />
     <ClCompile Include="..\GameFramework\Component\TransformComponent.cpp" />
     <ClCompile Include="..\GameFramework\Object.cpp" />
+    <ClCompile Include="..\GameFramework\PhysicsEngine.cpp" />
     <ClCompile Include="..\GameFramework\SceneObject.cpp" />
     <ClCompile Include="..\GameFramework\Scene.cpp" />
     <ClCompile Include="..\System\Application.cpp" />
+    <ClCompile Include="..\System\Renderer.cpp" />
+    <ClCompile Include="..\System\Resource.cpp" />
+    <ClCompile Include="..\System\ResourceManager.cpp" />
     <ClCompile Include="..\System\SplashScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\efw-engine\EngineTypes.h" />
+    <ClInclude Include="..\GameFramework\Component\AudioComponent.h" />
     <ClInclude Include="..\GameFramework\Component\BaseComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\ColliderComponent.h" />
     <ClInclude Include="..\GameFramework\Component\LuaComponent.h" />
+    <ClInclude Include="..\GameFramework\Component\RenderComponent.h" />
     <ClInclude Include="..\GameFramework\Component\TransformComponent.h" />
     <ClInclude Include="..\GameFramework\Object.h" />
+    <ClInclude Include="..\GameFramework\PhysicsEngine.h" />
     <ClInclude Include="..\GameFramework\SceneObject.h" />
     <ClInclude Include="..\GameFramework\Scene.h" />
     <ClInclude Include="..\System\Application.h" />
+    <ClInclude Include="..\System\Renderer.h" />
+    <ClInclude Include="..\System\Resource.h" />
     <ClInclude Include="..\System\ResourceManager.h" />
     <ClInclude Include="..\System\SplashScreen.h" />
   </ItemGroup>

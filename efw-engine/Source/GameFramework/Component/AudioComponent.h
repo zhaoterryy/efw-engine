@@ -15,10 +15,10 @@ class AudioComponent : public BaseComponent
 public:
 	AudioComponent(SceneObject* inHost, ResourceManager<sf::SoundBuffer>& soundResource);
 
+	virtual void Tick(float deltaTime) override;
 	void PlaySound(std::string id);
 
 private:
-	ResourceManager<sf::SoundBuffer>& soundResourcesRef;
+	ResourceManager<sf::SoundBuffer>& soundResourceManager;
 	sf::Sound sound;
 };
-

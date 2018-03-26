@@ -42,6 +42,27 @@
     <ClCompile Include="..\GameFramework\Component\LuaComponent.cpp">
       <Filter>GameFramework\Component</Filter>
     </ClCompile>
+    <ClCompile Include="..\System\Resource.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\ResourceManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Renderer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\PhysicsEngine.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\Component\AudioComponent.cpp">
+      <Filter>GameFramework\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\Component\ColliderComponent.cpp">
+      <Filter>GameFramework\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GameFramework\Component\RenderComponent.cpp">
+      <Filter>GameFramework\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameFramework\Object.h">
@@ -72,6 +93,24 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\GameFramework\Component\LuaComponent.h">
+      <Filter>GameFramework\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Resource.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Renderer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\PhysicsEngine.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\Component\AudioComponent.h">
+      <Filter>GameFramework\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\Component\ColliderComponent.h">
+      <Filter>GameFramework\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GameFramework\Component\RenderComponent.h">
       <Filter>GameFramework\Component</Filter>
     </ClInclude>
   </ItemGroup>

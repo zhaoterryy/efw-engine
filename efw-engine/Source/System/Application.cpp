@@ -171,9 +171,6 @@ void GEngine::StartGameLoop()
 
 		if (event.type == sf::Event::Closed)
 			exitPressed = true;
-
-		renderWindow.clear();
-		splashScreen.Show(renderWindow);
 	}
 
 	renderWindow.close();

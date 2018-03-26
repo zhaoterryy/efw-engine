@@ -1,13 +1,3 @@
-﻿  World.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  efw-engine.cpp
-  SplashScreen.cpp
-  Application.cpp
-  Object.cpp
-  InputComponent.cpp
-  ActorComponent.cpp
-  AISystemComponent.cpp
-  Actor.cpp
+﻿  Application.cpp
   efw-engine.vcxproj -> D:\ogura\skool\GameEngineDev\efw-engine\efw-engine\Source\Msvc\..\..\..\Game\x64\Debug\efw-engine.exe
   efw-engine.vcxproj -> D:\ogura\skool\GameEngineDev\efw-engine\Game\x64\Debug\efw-engine.pdb (Partial PDB)
