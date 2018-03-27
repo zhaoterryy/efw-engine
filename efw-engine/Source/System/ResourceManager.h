@@ -9,7 +9,7 @@ class ResourceManager
 {
 public:
     Resource<T>* Get(std::string const& id);
-    bool Get(std::string const& id, Resource<T>* outResource);
+    bool Get(std::string const& id, Resource<T>*& outResource);
 
     void LoadAll();
     void UnloadAll();
@@ -29,12 +29,12 @@ Resource<T>* ResourceManager<T>::Get(std::string const& id)
 	if (itr != resourceMap.end())
 		return &*itr->second;
 
-    std::cerr << "Couldn't find resource: " << id;
+    std::cerr << "Couldn't find resource: " << id << std::endl;
 	return nullptr;
 }
 
 template <class T>
-bool ResourceManager<T>::Get(std::string const& id, Resource<T>* outResource)
+bool ResourceManager<T>::Get(std::string const& id, Resource<T>*& outResource)
 {
 	outResource = Get(id);
     if (outResource != nullptr)
@@ -86,12 +86,13 @@ bool ResourceManager<T>::Unload(std::string const& id)
 template <class T>
 void ResourceManager<T>::AddResource(std::string const& id, std::string const& path) 
 {
-    if (Get(id) != nullptr)
+    if (resourceMap.find(id) != resourceMap.end())
     {
         std::cerr << "AddResource failed, id already exists." << std::endl;
         return;
     }
 
-	std::cout << "adding resource from " << path;
-	resourceMap.emplace(id, std::make_unique<Resource<T>>(path));
+    std::unique_ptr<Resource<T>> resource = std::make_unique<Resource<T>>(path);
+    std::cout << "adding resource from " << path << std::endl;
+    resourceMap.emplace(id, std::move(resource));
 }

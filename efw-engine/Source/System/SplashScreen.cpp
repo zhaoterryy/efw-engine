@@ -21,6 +21,7 @@ void SplashScreen::Show(sf::RenderWindow& renderWindow)
 	solSprite.setScale(0.5f, 0.5f);
 	solSprite.setPosition(renderWindow.getSize().x / 3, renderWindow.getSize().y / 2);
 
+	renderWindow.clear();
 	renderWindow.draw(sfmlSprite);
 	renderWindow.draw(solSprite);
 	renderWindow.draw(ssTitle);

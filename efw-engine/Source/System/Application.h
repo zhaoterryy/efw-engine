@@ -1,12 +1,14 @@
 #pragma once
 
-#include "SplashScreen.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 #include "GameFramework/Scene.h"
 
 #include "sol.hpp"
 #include <memory>
 #include <stack>
 #include <functional>
+
+class Renderer;
 
 namespace sf
 {
@@ -55,6 +57,7 @@ private:
 	GEngine& operator=(const GEngine&);
 
 	void InitLua();
+	void InitRenderer();
 
 	bool IsExiting();
 	void GameLoop(float deltaTime);
@@ -70,8 +73,8 @@ private:
 	std::string gameTitle;
 	sol::state lua;
 	sf::RenderWindow renderWindow;
-	SplashScreen splashScreen;
 	std::stack<std::unique_ptr<Scene>> sceneStack;
+	Renderer* renderer;
 
 	bool exitPressed;
 

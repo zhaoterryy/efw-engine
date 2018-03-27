@@ -1,12 +1,15 @@
 #include "Application.h"
 #include "efw-engine/EngineTypes.h"
 #include "GameFramework/Component/TransformComponent.h"
+#include "GameFramework/Component/RenderComponent.h"
 #include "GameFramework/Component/LuaComponent.h"
 #include "GameFramework/Scene.h"
 #include "GameFramework/SceneObject.h"
 #include "ResourceManager.h"
+#include "SplashScreen.h"
+#include "Renderer.h"
 
-#include "SFML/Window/Window.hpp"
+#include <SFML/Window/Window.hpp>
 #include <iostream>
 #include <chrono>
 
@@ -117,21 +120,21 @@ namespace
 
 	DWORDLONG ReadAvailableRAM()
 	{
-		MEMORYSTATUSEX status = { sizeof status };
+		MEMORYSTATUSEX status = {sizeof status};
 		GlobalMemoryStatusEx(&status);
 		return status.ullAvailPhys / (1024 * 1024 * 1024);
 	}
 
 	DWORDLONG ReadAvailableVirtualMemory()
 	{
-		MEMORYSTATUSEX status = { sizeof status };
+		MEMORYSTATUSEX status = {sizeof status};
 		GlobalMemoryStatusEx(&status);
 		return status.ullAvailVirtual / (1024 * 1024 * 1024);
 	}
 #endif
 }
 
-GEngine* GEngine::instance;
+GEngine *GEngine::instance;
 
 void GEngine::StartGameLoop()
 {
@@ -141,44 +144,67 @@ void GEngine::StartGameLoop()
 		std::exit(EXIT_FAILURE);
 	}
 
+	SplashScreen splashScreen;
 	renderWindow.create(sf::VideoMode(1024, 768, 32), "efw-engine");
 	gameState = EGameState::SPLASH_SCREEN;
 	splashScreen.Show(renderWindow);
 
-	SceneObject* obj = new SceneObject();
+	SceneObject *obj = new SceneObject();
 
 	GetCurrentScene().AddObject(obj);
-	obj->AddComponent<TransformComponent>(FVector(5), 5.0f, FVector(2));
-	obj->AddComponent<TransformComponent>();
+	obj->AddComponent<TransformComponent>(FVector(100), 45.0f, FVector(2));
+
+	GetCurrentScene().textureResources.AddResource("sol", "images/sol.png");
+
+	// RenderComponent& rc = obj->AddComponent<RenderComponent>();
+	// rc.spriteId = "sol";
+
 	obj->SetName("poop");
 
 	GetCurrentScene().Tick(0);
 	std::cout << "Scene: " << GetCurrentScene().GetSceneName() << std::endl;
 	GetCurrentScene().TestPrintObjectTransforms();
-	
+
 	using namespace std::chrono;
 
-	auto Previous = high_resolution_clock::now();
+	auto previous = high_resolution_clock::now();
+	auto ssElapsed = duration_values<duration<long, std::nano>>::zero();
+
+	while (ssElapsed < seconds(3))
+	{
+		auto current = high_resolution_clock::now();
+		ssElapsed += current - previous;
+		previous = current;
+
+		sf::Event event;
+		if (renderWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				exitPressed = true;
+		}
+	}
 
 	while (!IsExiting())
 	{
-		auto Current = high_resolution_clock::now();
-		GameLoop((float)(Current - Previous).count() / 1000000000);
-		Previous = Current;
+		auto current = high_resolution_clock::now();
+		GameLoop((float)(current - previous).count() / 1000000000);
+		previous = current;
 
 		sf::Event event;
-		renderWindow.pollEvent(event);
-
-		if (event.type == sf::Event::Closed)
-			exitPressed = true;
+		if (renderWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				exitPressed = true;
+		}
 	}
 
 	renderWindow.close();
 }
 
-void GEngine::Initialize(const char* firstScene)
+void GEngine::Initialize(const char *firstScene)
 {
 	InitLua();
+	InitRenderer();
 	sceneStack.push(GetSceneFromLua(firstScene));
 	lua["test"]();
 	CheckMinimumReq();
@@ -206,7 +232,7 @@ void GEngine::CheckMinimumReq()
 #endif
 }
 
-std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
+std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char *sceneName)
 {
 	// grab all scenes
 	sol::table scenes = lua["scenes"];
@@ -215,7 +241,7 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 	sol::optional<sol::table> sceneTbl = scenes[sceneName];
 	if (sceneTbl != sol::nullopt)
 	{
-		Scene* newScene = new Scene();
+		Scene *newScene = new Scene();
 
 		newScene->SetSceneName(sceneTbl->get_or<std::string>("name", "Untitled"));
 
@@ -224,10 +250,9 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 		if (objectsTbl != sol::nullopt)
 		{
 			sceneTbl->set("objects", sol::new_table());
-			objectsTbl->for_each([&newScene = newScene, &sceneTbl](auto k, auto v)
-			{
+			objectsTbl->for_each([&newScene = newScene, &sceneTbl ](auto k, auto v) {
 				std::string id = k.template as<std::string>();
-				SceneObject* newObject = new SceneObject();
+				SceneObject *newObject = new SceneObject();
 
 				// get current object's properties
 				sol::table objectTbl = v.template as<sol::table>();
@@ -239,8 +264,7 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 				sol::optional<sol::table> componentsTbl = objectTbl.get<sol::table>("components");
 				if (componentsTbl != sol::nullopt)
 				{
-					componentsTbl->for_each([newObject](auto comp_k, auto comp_v)
-					{
+					componentsTbl->for_each([newObject](auto comp_k, auto comp_v) {
 						// check for Transform
 						if (comp_k.template as<std::string>() == "transform")
 						{
@@ -268,6 +292,10 @@ std::unique_ptr<Scene> GEngine::GetSceneFromLua(const char* sceneName)
 								}
 							}
 						}
+						if (comp_k.template as<std::string>() == "sprite_id")
+						{
+							newObject->AddComponent<RenderComponent>(comp_v.template as<std::string>());
+						}
 					});
 				}
 				newScene->AddObject(newObject);
@@ -284,64 +312,65 @@ void GEngine::InitLua()
 	lua.open_libraries();
 
 	lua.new_usertype<FVector>("Vector",
-		sol::constructors<void(), void(float, float)>(),
-		"x", &FVector::X,
-		"y", &FVector::Y
-	);
+							  sol::constructors<void(), void(float, float)>(),
+							  "x", &FVector::X,
+							  "y", &FVector::Y);
 
 	lua.new_usertype<FTransform>("Transform",
-		sol::constructors<void(), void(FVector, float, FVector)>(),
-		"position", &FTransform::Position,
-		"rotation", &FTransform::Rotation,
-		"scale", &FTransform::Scale
-	);
+								 sol::constructors<void(), void(FVector, float, FVector)>(),
+								 "position", &FTransform::Position,
+								 "rotation", &FTransform::Rotation,
+								 "scale", &FTransform::Scale);
 
 	lua.new_usertype<BaseComponent>("BaseComponent",
-		"new", sol::no_constructor,
-		"internal_tick", &BaseComponent::Tick
-	);
+									"new", sol::no_constructor,
+									"internal_tick", &BaseComponent::Tick);
 
 	lua.new_usertype<LuaComponent>("Component",
-		sol::base_classes, sol::bases<BaseComponent>(),
-		"new", sol::no_constructor,
-		"tick", &LuaComponent::luaTick
-	);
+								   sol::base_classes, sol::bases<BaseComponent>(),
+								   "new", sol::no_constructor,
+								   "tick", &LuaComponent::luaTick);
 
 	lua.new_usertype<TransformComponent>("TransformComponent",
-		"new", sol::no_constructor,
-		sol::base_classes, sol::bases<BaseComponent>(),
-		"relative_transform", sol::property(&TransformComponent::SetRelativeTransform, &TransformComponent::GetRelativeTransform),
-		"world_transform", sol::property(&TransformComponent::GetWorldTransform)
-	);
+										 "new", sol::no_constructor,
+										 sol::base_classes, sol::bases<BaseComponent>(),
+										 "relative_transform", sol::property(&TransformComponent::SetRelativeTransform, &TransformComponent::GetRelativeTransform),
+										 "world_transform", sol::property(&TransformComponent::GetWorldTransform));
+
+	lua.new_usertype<RenderComponent>("RenderComponent",
+									  "new", sol::no_constructor,
+									  sol::base_classes, sol::bases<BaseComponent>(),
+									  "spriteId", &RenderComponent::spriteId);
 
 	lua.new_usertype<Object>("Object",
-		"name", sol::property(&Object::SetName, &Object::GetName),
-		"new", sol::no_constructor
-	);
+							 "name", sol::property(&Object::SetName, &Object::GetName),
+							 "new", sol::no_constructor);
 
 	lua.new_usertype<SceneObject>("SceneObject",
-		sol::base_classes, sol::bases<Object>(),
-		"new_component", &SceneObject::Lua_NewComponent,
-		"get_transform_comp", &SceneObject::GetComponent<TransformComponent>,
-		"parent", sol::property(&SceneObject::SetParent, &SceneObject::GetParent),
-		"add_child", &SceneObject::AddChild
-	);
+								  sol::base_classes, sol::bases<Object>(),
+								  "new_component", &SceneObject::Lua_NewComponent,
+								  "get_transform_comp", &SceneObject::GetComponent<TransformComponent>,
+								  "parent", sol::property(&SceneObject::SetParent, &SceneObject::GetParent),
+								  "add_child", &SceneObject::AddChild);
 
 	// half assed scene utype
 	lua.new_usertype<Scene>("Scene",
-		"add_object", &Scene::AddObject
-	);
+							"add_object", &Scene::AddObject);
 
 	try
 	{
 		lua.script_file("Scripts/main.lua");
 	}
-	catch (const sol::error& err)
+	catch (const sol::error &err)
 	{
 		std::cerr << err.what();
 		std::exit(EXIT_FAILURE);
 	}
+}
 
+void GEngine::InitRenderer()
+{
+	renderer = new Renderer(renderWindow);
 }
 
 bool GEngine::IsExiting()
@@ -351,6 +380,6 @@ bool GEngine::IsExiting()
 
 void GEngine::GameLoop(float deltaTime)
 {
+	renderer->Draw(GetCurrentScene());
 	GetCurrentScene().Tick(deltaTime);
-	// std::cout << std::fixed << deltaTime << std::endl;
 }

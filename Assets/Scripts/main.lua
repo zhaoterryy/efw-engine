@@ -6,25 +6,14 @@ scenes =
 		name = "Main",
 		object_list = entities
 	},
-	splash_screen =
+	menu = 
 	{
-		name = "Splash Screen"
-		-- object_list = 
-		-- {
-		-- 	diamond = 
-		-- 	{
-				
-		-- 	}
-		-- }
+		name = "Main Menu",
+		object_list = {}
 	}
 }
 
 entities = nil
-
-splash_screen = 
-{
-	img_path = "images/SplashScreen.png"
-}
 
 function test()
 	-- local tc = scenes.main.objects.beast:get_transform_comp()
@@ -35,6 +24,10 @@ function test()
 	local beast = scenes.main.objects.beast
 	local comp = beast:new_component()
 	comp.tick = function(dt)
+		local tc = beast:get_transform_comp()
+		local rt = tc.relative_transform
+		local t = Transform.new(Vector.new(rt.position.x + (5 * dt), rt.position.y + (5 * dt)), rt.rotation + (25 * dt), rt.scale)
+		tc.relative_transform = t
 		-- print(dt)
 		-- local tc = beast:get_transform_comp()
 		-- local t = Transform.new(tc.relative_transform.position, tc.relative_transform.rotation + (1 * dt), tc.relative_transform.scale)
