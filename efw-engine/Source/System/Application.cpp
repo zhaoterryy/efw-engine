@@ -3,6 +3,7 @@
 #include "GameFramework/Component/TransformComponent.h"
 #include "GameFramework/Component/RenderComponent.h"
 #include "GameFramework/Component/LuaComponent.h"
+#include "GameFramework/Component/AudioComponent.h"
 #include "GameFramework/Scene.h"
 #include "GameFramework/SceneObject.h"
 #include "ResourceManager.h"
@@ -135,6 +136,8 @@ namespace
 }
 
 GEngine *GEngine::instance;
+GEngine::GEngine() = default;
+GEngine::~GEngine() = default;
 
 void GEngine::StartGameLoop()
 {
@@ -152,12 +155,14 @@ void GEngine::StartGameLoop()
 	SceneObject *obj = new SceneObject();
 
 	GetCurrentScene().AddObject(obj);
-	obj->AddComponent<TransformComponent>(FVector(100), 45.0f, FVector(2));
+	obj->AddComponent<TransformComponent>(FVector(100), 45.0f, FVector(0.25f));
+	obj->AddComponent<AudioComponent>();
 
 	GetCurrentScene().textureResources.AddResource("sol", "images/sol.png");
+	GetCurrentScene().soundResources.AddResource("ball_hit", "sfx/golfball.wav");
 
-	// RenderComponent& rc = obj->AddComponent<RenderComponent>();
-	// rc.spriteId = "sol";
+	RenderComponent& rc = obj->AddComponent<RenderComponent>();
+	rc.spriteId = "sol";
 
 	obj->SetName("poop");
 
@@ -170,7 +175,7 @@ void GEngine::StartGameLoop()
 	auto previous = high_resolution_clock::now();
 	auto ssElapsed = duration_values<duration<long, std::nano>>::zero();
 
-	while (ssElapsed < seconds(3))
+	while (ssElapsed < seconds(2))
 	{
 		auto current = high_resolution_clock::now();
 		ssElapsed += current - previous;
@@ -313,14 +318,14 @@ void GEngine::InitLua()
 
 	lua.new_usertype<FVector>("Vector",
 							  sol::constructors<void(), void(float, float)>(),
-							  "x", &FVector::X,
-							  "y", &FVector::Y);
+							  "x", &FVector::x,
+							  "y", &FVector::y);
 
 	lua.new_usertype<FTransform>("Transform",
 								 sol::constructors<void(), void(FVector, float, FVector)>(),
-								 "position", &FTransform::Position,
-								 "rotation", &FTransform::Rotation,
-								 "scale", &FTransform::Scale);
+								 "position", &FTransform::position,
+								 "rotation", &FTransform::rotation,
+								 "scale", &FTransform::scale);
 
 	lua.new_usertype<BaseComponent>("BaseComponent",
 									"new", sol::no_constructor,
@@ -370,7 +375,7 @@ void GEngine::InitLua()
 
 void GEngine::InitRenderer()
 {
-	renderer = new Renderer(renderWindow);
+	renderer = std::make_unique<Renderer>();
 }
 
 bool GEngine::IsExiting()
@@ -380,6 +385,6 @@ bool GEngine::IsExiting()
 
 void GEngine::GameLoop(float deltaTime)
 {
-	renderer->Draw(GetCurrentScene());
+	renderer->Draw(renderWindow, GetCurrentScene());
 	GetCurrentScene().Tick(deltaTime);
 }

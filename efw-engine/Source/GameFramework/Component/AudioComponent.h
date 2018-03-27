@@ -13,12 +13,14 @@ namespace sf
 class AudioComponent : public BaseComponent 
 {
 public:
-	AudioComponent(SceneObject* inHost, ResourceManager<sf::SoundBuffer>& soundResource);
+	AudioComponent(SceneObject* inHost);
 
 	virtual void Tick(float deltaTime) override;
 	void PlaySound(std::string id);
 
+	bool IsPlaying() const;
+
 private:
-	ResourceManager<sf::SoundBuffer>& soundResourceManager;
+	ResourceManager<sf::SoundBuffer>* soundResourceManager;
 	sf::Sound sound;
 };

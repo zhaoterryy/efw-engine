@@ -1,13 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "GameFramework/Scene.h"
 
 #include "sol.hpp"
 #include <memory>
 #include <stack>
 #include <functional>
 
+class Scene;
 class Renderer;
 
 namespace sf
@@ -49,8 +49,8 @@ public:
 
 private:
 	// Only allow internal ctor & dtor
-	GEngine() = default;
-	~GEngine() = default;
+	GEngine();
+	~GEngine();
 
 	// Do not allow copying or assignment
 	GEngine(const GEngine&);
@@ -74,7 +74,7 @@ private:
 	sol::state lua;
 	sf::RenderWindow renderWindow;
 	std::stack<std::unique_ptr<Scene>> sceneStack;
-	Renderer* renderer;
+	std::unique_ptr<Renderer> renderer;
 
 	bool exitPressed;
 

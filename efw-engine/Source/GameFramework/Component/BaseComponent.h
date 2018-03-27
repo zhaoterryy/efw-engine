@@ -6,7 +6,7 @@ class BaseComponent
 {
 public:
 	virtual void Tick(float deltaTime);
-	SceneObject* GetHost();
+	SceneObject* GetOwner();
 
 protected:
 	BaseComponent(SceneObject* inHost);

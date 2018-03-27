@@ -10,7 +10,7 @@ SplashScreen::SplashScreen()
 
 void SplashScreen::Show(sf::RenderWindow& renderWindow)
 {
-	sf::Text ssTitle("eco frag warriors\n\n\n\npowered by: ", titleFont);
+	sf::Text ssTitle("efw-engine\n\n\n\npowered by: ", titleFont);
 	ssTitle.setPosition(50, renderWindow.getSize().y / 2 - ssTitle.getGlobalBounds().height / 2);
 
 	sf::Sprite sfmlSprite(sfmlImage);

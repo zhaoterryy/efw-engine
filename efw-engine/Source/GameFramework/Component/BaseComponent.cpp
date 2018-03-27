@@ -11,7 +11,7 @@ void BaseComponent::Tick(float deltaTime)
 
 }
 
-SceneObject* BaseComponent::GetHost()
+SceneObject* BaseComponent::GetOwner()
 {
 	return host;
 }

@@ -16,9 +16,9 @@ TransformComponent::TransformComponent(SceneObject* inHost, FTransform trans) :
 TransformComponent::TransformComponent(SceneObject* inHost, FVector pos, float rot, FVector scl) :
 	BaseComponent(inHost)
 {
-	relativeTransform.Position = pos;
-	relativeTransform.Rotation = rot;
-	relativeTransform.Scale = scl;
+	relativeTransform.position = pos;
+	relativeTransform.rotation = rot;
+	relativeTransform.scale = scl;
 }
 
 void TransformComponent::Tick(float deltaTime)
