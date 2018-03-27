@@ -11,7 +11,7 @@
             "program": "${workspaceRoot}/../Game/osx/efw-engine",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}/Source/Msvc/WorkingDir",
+            "cwd": "${workspaceRoot}/../Assets",
             "environment": [],
             "MIMode": "lldb"
         },
@@ -22,7 +22,7 @@
             "program": "${workspaceRoot}/../Game/osx/efw-engine",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}/Source/Msvc/WorkingDir",
+            "cwd": "${workspaceRoot}/../Assets",
             "environment": [],
             "preLaunchTask": "Build",
             "MIMode": "lldb"

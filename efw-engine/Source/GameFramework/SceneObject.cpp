@@ -1,8 +1,16 @@
 #include "SceneObject.h"
+#include "Component/AudioComponent.h"
+#include <SFML/Window/Keyboard.hpp>
 
 void SceneObject::Tick(float deltaTime)
 {
 	Object::Tick(deltaTime);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		if (GetComponent<AudioComponent>() != nullptr)
+			GetComponent<AudioComponent>()->PlaySound("ball_hit");
+	}
 
 	for (auto& comp : components)
 		comp->Tick(deltaTime);

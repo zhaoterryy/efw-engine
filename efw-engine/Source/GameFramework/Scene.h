@@ -1,8 +1,14 @@
 #pragma once
 
+#include "System/ResourceManager.h"
 #include <vector>
 #include <string>
 
+namespace sf 
+{
+	class SoundBuffer;
+	class Texture;
+}
 class Object;
 
 class Scene
@@ -23,6 +29,9 @@ public:
 
 	std::vector<Object*>::const_iterator GetElementsBegin() { return sceneElements.begin(); }
 	std::vector<Object*>::const_iterator GetElementsEnd() { return sceneElements.end(); }
+
+	ResourceManager<sf::SoundBuffer> soundResources;
+	ResourceManager<sf::Texture> textureResources;
 
 protected:
 	std::vector<Object*> sceneElements;

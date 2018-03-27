@@ -1,89 +1,95 @@
 #pragma once
-#include "SFML/Graphics/Texture.hpp"
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <memory>
 #include <string>
+#include <iostream>
 
 template <class T>
 class Resource
 {
 public:
-	static Resource* NULL_RESOURCE;
-
 	Resource(std::string const& path);
 
 	void Load();
 	void Unload();
 
-	void SetFilePath(std::string const& path);
-	std::string GetFilePath() const;
-
 	bool IsLoaded() const;
 
-	T& Get() const;
-private:
+	T* GetAsset() const;
+
 	std::string filePath;
+
+private:
 	std::unique_ptr<T> obj;
 	bool isLoaded;
 };
 
 template <class T>
-Resource<T>* Resource<T>::NULL_RESOURCE = nullptr;
-
-template <class T>
 Resource<T>::Resource(std::string const& path) :
 	filePath(path),
-	isLoaded(false)
-{	
+	isLoaded(false),
+	obj(std::make_unique<T>())
+{
+	Load();
 }
 
 template <>
-Resource<sf::Texture>::Resource(std::string const& path) :
-	filePath(path)
+inline void Resource<sf::Texture>::Load()
 {
-	if (obj->loadFromFile(path))
+	if (obj->loadFromFile(filePath))
+	{
 		isLoaded = true;
-
-	std::cerr << "Unable to load texture from: " << path;
-	isLoaded = false;	
+		return;
+	}
+	
+	std::cerr << "Unable to load texture from: " << filePath;
+	isLoaded = false;
 }
 
 template <>
-void Resource<sf::Texture>::Load() 
+inline void Resource<sf::SoundBuffer>::Load()
 {
-	obj->loadFromFile(filePath);
-	isLoaded = true;
+	if (obj->loadFromFile(filePath))
+	{
+		isLoaded = true;
+		return;
+	}
+	std::cerr << "Unable to load sound buffer from: " << filePath;
+	isLoaded = false;
+}
+
+template <>
+inline void Resource<sf::Font>::Load()
+{
+	if (obj->loadFromFile(filePath))
+	{
+		isLoaded = true;
+		return;
+	}
+	std::cerr << "Unable to load font from: " << filePath;
+	isLoaded = false;
 }
 
 template <class T>
-void Resource<T>::Unload()
+inline void Resource<T>::Unload()
 {
 	obj.reset();
 	isLoaded = false;
 }
 
 template <class T>
-void Resource<T>::SetFilePath(std::string const& path)
-{
-	filePath = path;
-}
-
-template <class T>
-std::string Resource<T>::GetFilePath() const 
-{
-	return filePath;
-}
-
-template <class T>
-bool Resource<T>::IsLoaded() const
+inline bool Resource<T>::IsLoaded() const
 {
 	return isLoaded;
 }
 
 template <class T>
-T& Resource<T>::Get() const
+inline T* Resource<T>::GetAsset() const
 {
-	if (obj)
-		return *obj;
+	if (isLoaded)
+		return &*obj;
 	else
-		return &NULL_RESOURCE;
+		return nullptr;
 }

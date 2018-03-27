@@ -2,13 +2,14 @@
 #include "Resource.h"
 
 #include <unordered_map>
+#include <iostream>
 
 template <class T>
 class ResourceManager
 {
 public:
-    T& Get(std::string const& id);
-    bool Get(std::string const& id, T& outResource);
+    Resource<T>* Get(std::string const& id);
+    bool Get(std::string const& id, Resource<T>*& outResource);
 
     void LoadAll();
     void UnloadAll();
@@ -22,21 +23,21 @@ private:
 };
 
 template <class T>
-T& ResourceManager<T>::Get(std::string const& id) 
+Resource<T>* ResourceManager<T>::Get(std::string const& id) 
 {
     auto itr = resourceMap.find(id);
-    if (itr != resourceMap.end()) 
-        return *itr->second;
+	if (itr != resourceMap.end())
+		return &*itr->second;
 
-    std::cerr << "Couldn't find resource: " << id;
-    return &Resource<T>::NULL_RESOURCE;
+    std::cerr << "Couldn't find resource: " << id << std::endl;
+	return nullptr;
 }
 
 template <class T>
-bool ResourceManager<T>::Get(std::string const& id, T& outResource)
+bool ResourceManager<T>::Get(std::string const& id, Resource<T>*& outResource)
 {
-    outResource = Get(id);
-    if (outResource != Resource<T>::NULL_RESOURCE)
+	outResource = Get(id);
+    if (outResource != nullptr)
         return true;
     else
         return false;
@@ -83,12 +84,15 @@ bool ResourceManager<T>::Unload(std::string const& id)
 }
 
 template <class T>
-void ResourceManager<T>::AddResource(std::string const& id, std::string const& path) {
-    if (Get(id) != Resource<T>::NULL_RESOURCE)
+void ResourceManager<T>::AddResource(std::string const& id, std::string const& path) 
+{
+    if (resourceMap.find(id) != resourceMap.end())
     {
         std::cerr << "AddResource failed, id already exists." << std::endl;
         return;
     }
 
-    resourceMap.emplace(id, { path });
+    std::unique_ptr<Resource<T>> resource = std::make_unique<Resource<T>>(path);
+    std::cout << "adding resource from " << path << std::endl;
+    resourceMap.emplace(id, std::move(resource));
 }

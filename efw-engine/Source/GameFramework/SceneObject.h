@@ -45,11 +45,13 @@ T* SceneObject::GetComponent()
 {
 	static_assert(std::is_base_of<BaseComponent, T>::value, "GetComponent<T>(): T must be derived from BaseComponent");
 	for (auto& comp : components)
+#pragma warning(disable:4068)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
 		if (typeid(*comp) == typeid(T))
 			return static_cast<T*>(&*comp);
 #pragma clang diagnostic pop
+#pragma warning(default:4068)
 	return nullptr;
 }
 

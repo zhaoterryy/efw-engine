@@ -1,12 +1,14 @@
 #pragma once
 
-#include "SplashScreen.h"
-#include "GameFramework/Scene.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #include "sol.hpp"
 #include <memory>
 #include <stack>
 #include <functional>
+
+class Scene;
+class Renderer;
 
 namespace sf
 {
@@ -47,14 +49,15 @@ public:
 
 private:
 	// Only allow internal ctor & dtor
-	GEngine() = default;
-	~GEngine() = default;
+	GEngine();
+	~GEngine();
 
 	// Do not allow copying or assignment
 	GEngine(const GEngine&);
 	GEngine& operator=(const GEngine&);
 
 	void InitLua();
+	void InitRenderer();
 
 	bool IsExiting();
 	void GameLoop(float deltaTime);
@@ -70,8 +73,10 @@ private:
 	std::string gameTitle;
 	sol::state lua;
 	sf::RenderWindow renderWindow;
-	SplashScreen splashScreen;
 	std::stack<std::unique_ptr<Scene>> sceneStack;
+	std::unique_ptr<Renderer> renderer;
+
+	bool exitPressed;
 
 	Scene& GetCurrentScene() { return *sceneStack.top(); }
 };

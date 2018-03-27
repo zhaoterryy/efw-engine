@@ -2,10 +2,7 @@
 #include "Component/TransformComponent.h"
 #include "SceneObject.h"
 
-Scene::Scene()
-{
-
-}
+Scene::Scene() = default;
 
 void Scene::Tick(float deltaTime)
 {
@@ -18,6 +15,7 @@ void Scene::Tick(float deltaTime)
 
 void Scene::AddObject(Object* obj)
 {
+	obj->SetScene(this);
 	sceneElements.push_back(obj);
 }
 

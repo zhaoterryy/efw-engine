@@ -1,5 +1,5 @@
 {
-    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.errorSquiggles": "Enabled",
     "files.associations": {
         "chrono": "cpp",
         "__locale": "cpp",
@@ -27,6 +27,8 @@
         "initializer_list": "cpp",
         "new": "cpp",
         "stdexcept": "cpp",
-        "typeinfo": "cpp"
-    }
+        "typeinfo": "cpp",
+        "stack": "cpp"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }
