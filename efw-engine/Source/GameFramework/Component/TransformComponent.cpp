@@ -38,17 +38,17 @@ void TransformComponent::SetRelativeTransform(const FTransform transform)
 
 void TransformComponent::SetRelPosition(FVector pos)
 {
-	relativeTransform.Position = pos;
+	relativeTransform.position = pos;
 }
 
 void TransformComponent::SetRelRotation(float rot)
 {
-	relativeTransform.Rotation = rot;
+	relativeTransform.rotation = rot;
 }
 
 void TransformComponent::SetRelScale(FVector scl)
 {
-	relativeTransform.Scale = scl;
+	relativeTransform.scale = scl;
 }
 
 FTransform TransformComponent::GetRelativeTransform() const

@@ -153,18 +153,31 @@ void GEngine::StartGameLoop()
 	splashScreen.Show(renderWindow);
 
 	SceneObject *obj = new SceneObject();
+	SceneObject *obj2 = new SceneObject();
 
 	GetCurrentScene().AddObject(obj);
-	obj->AddComponent<TransformComponent>(FVector(100), 45.0f, FVector(0.25f));
+	GetCurrentScene().AddObject(obj2);
+	obj->AddComponent<TransformComponent>(FVector(400, 300), 45.0f, FVector(0.5f));
+	obj2->AddComponent<TransformComponent>(FVector(100, 100), 30.0f, FVector(0.75f));
 	obj->AddComponent<AudioComponent>();
 
 	GetCurrentScene().textureResources.AddResource("sol", "images/sol.png");
 	GetCurrentScene().soundResources.AddResource("ball_hit", "sfx/golfball.wav");
 
 	RenderComponent& rc = obj->AddComponent<RenderComponent>();
+	obj2->AddComponent<RenderComponent>().spriteId = "sol";
 	rc.spriteId = "sol";
 
 	obj->SetName("poop");
+	obj2->SetName("ultrapoop");
+
+	obj->AddChild(obj2);
+
+	for (auto it = GetCurrentScene().GetElementsBegin(); it != GetCurrentScene().GetElementsEnd(); it++)
+	{
+		if ((*it)->GetName() == "BEAST")
+			static_cast<SceneObject*>(*it)->AddChild(obj);
+	}
 
 	GetCurrentScene().Tick(0);
 	std::cout << "Scene: " << GetCurrentScene().GetSceneName() << std::endl;

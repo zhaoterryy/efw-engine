@@ -20,6 +20,11 @@ struct FVector
 		return FVector(lhs.x + rhs.x, lhs.y + rhs.y);
 	}
 
+	friend FVector operator*(const FVector& lhs, const FVector& rhs)
+	{
+		return FVector(lhs.x * rhs.x, lhs.y * rhs.y);
+	}
+
 	friend std::ostream& operator<<(std::ostream& os, const FVector& vector)
 	{
 		os << "X: " << vector.x << " Y: " << vector.y;
@@ -121,7 +126,7 @@ struct FTransform
 	{
 		return FTransform(lhs.position + rhs.position,
 			lhs.rotation + rhs.rotation,
-			lhs.scale + rhs.scale);
+			lhs.scale * rhs.scale);
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const FTransform& transform)

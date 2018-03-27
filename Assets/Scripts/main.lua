@@ -26,7 +26,7 @@ function test()
 	comp.tick = function(dt)
 		local tc = beast:get_transform_comp()
 		local rt = tc.relative_transform
-		local t = Transform.new(Vector.new(rt.position.x + (5 * dt), rt.position.y + (5 * dt)), rt.rotation + (25 * dt), rt.scale)
+		local t = Transform.new(Vector.new(rt.position.x + (5 * dt), rt.position.y + (5 * dt)), rt.rotation + (105 * dt), rt.scale)
 		tc.relative_transform = t
 		-- print(dt)
 		-- local tc = beast:get_transform_comp()
