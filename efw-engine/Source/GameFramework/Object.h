@@ -2,6 +2,7 @@
 
 #include <string>
 
+class Scene;
 class Object
 {
 public:
@@ -9,10 +10,12 @@ public:
 
 	virtual void Tick(float deltaTime);
 
+	void SetName(std::string inName);
 	inline std::string GetName() { return name; }
 
-	void SetName(std::string inName);
-
+	void SetScene(Scene* scene);
+	Scene* GetScene() const { return scene; }
 private:
 	std::string name;
+	Scene* scene;
 };

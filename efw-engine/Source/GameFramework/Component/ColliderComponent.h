@@ -10,12 +10,12 @@ struct AABB
 
     FVector getBottomLeft() 
     {
-        return FVector(center.X - extent.X, center.Y - extent.Y);
+        return FVector(center.x - extent.x, center.y - extent.y);
     }
 
     FVector getTopRight()
     {
-        return FVector(center.X + extent.X, center.Y + extent.Y);
+        return FVector(center.x + extent.x, center.y + extent.y);
     }
 };
 

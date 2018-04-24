@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "GameFramework/Scene.h"
 
 #include "sol.hpp"
+#include "GameFramework/Scene.h"
 #include <memory>
 #include <stack>
 #include <functional>
@@ -17,6 +17,15 @@ namespace sf
 
 class GEngine
 {
+private:
+	// Only allow internal ctor & dtor
+	GEngine() = default;
+	~GEngine() = default;
+
+	// Do not allow copying or assignment
+	GEngine(const GEngine&);
+	GEngine& operator=(const GEngine&);
+
 public:
 	enum class EGameState
 	{
@@ -43,27 +52,16 @@ public:
 	}
 
 	void StartGameLoop();
-	void Initialize(const char* firstScene);
+	void Initialize();
 
 	EGameState GetGameState() { return gameState; }
 
 private:
-	// Only allow internal ctor & dtor
-	GEngine() = default;
-	~GEngine() = default;
-
-	// Do not allow copying or assignment
-	GEngine(const GEngine&);
-	GEngine& operator=(const GEngine&);
-
-	void InitLua();
 	void InitRenderer();
 
 	bool IsExiting();
 	void GameLoop(float deltaTime);
 	void CheckMinimumReq();
-
-	std::unique_ptr<Scene> GetSceneFromLua(const char* sceneName);
 
 private:
 	// static instance

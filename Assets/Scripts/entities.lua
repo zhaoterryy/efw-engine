@@ -1,4 +1,4 @@
-entities = 
+return 
 {
 	beast = 
 	{
@@ -15,4 +15,3 @@ entities =
 		}
     }
 }
-

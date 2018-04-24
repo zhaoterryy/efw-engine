@@ -9,7 +9,7 @@
             "command": "cd",
             "args": [
                 "${workspaceRoot}/Intermediate/efw-engine-osx",
-                ";g++",
+                ";clang",
                 "-c", "${workspaceRoot}/**/*.cpp",
                 // "(find",
                 // ".", "-type", "f", "-name", "'*.h'",
@@ -19,17 +19,18 @@
                 "-I${workspaceRoot}/Lib/sol/include",
                 "-I${workspaceRoot}/Lib/lua53/include",
                 "-I${workspaceRoot}/Source",
-                "-std=c++1z",
+                "-std=c++17",
                 "-g",
-                ";g++",
+                ";clang",
                 "*.o",
                 "-o",
                 "efw-engine",
-                "-L${workspaceRoot}/Lib/SFML-2.4.2-osx-clang/lib",
+                "-framework", "sfml-graphics", "-framework", "sfml-window",
+                "-framework", "sfml-system", "-framework", "sfml-audio",
                 "-L${workspaceRoot}/Lib/lua53/lib",
-                "-llua53", "-lsfml-graphics", "-lsfml-window", "-lsfml-system", "-lsfml-audio",
-                "-Wl,-rpath,${workspaceRoot}/Lib/SFML-2.4.2-osx-clang/lib",
+                "-llua53",
                 "-Wl,-rpath,${workspaceRoot}/Lib/lua53/lib",
+                "-lstdc++",
                 ";mv", "efw-engine", "${workspaceRoot}/../Game/osx/efw-engine"    
             ],
             "group": {
@@ -39,8 +40,7 @@
             "presentation": {
                 "echo": false,
                 "reveal": "silent",
-                "focus": false,
-                "panel": "new"
+                "focus": false
             },
             "problemMatcher": "$gcc"
         }

@@ -5,15 +5,10 @@
 
 #include <SFML/Graphics.hpp>
 
-Renderer::Renderer(sf::RenderWindow& rw) :
-	renderWindow(rw)
-{
-}
-
 // i really want to optimize this better.......... but nah
-void Renderer::Draw(Scene& scene)
+void Renderer::Draw(sf::RenderWindow& rw, Scene& scene)
 {
-	renderWindow.clear();
+	rw.clear();
     for (auto it = scene.GetElementsBegin(); it != scene.GetElementsEnd(); it++)
     {
         SceneObject* sceneObject = static_cast<SceneObject*>(*it);
@@ -31,12 +26,12 @@ void Renderer::Draw(Scene& scene)
 			sf::FloatRect bounds = sprite.getLocalBounds();
 			sprite.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 
-			sprite.setPosition(trans.Position.X, trans.Position.Y);
-			sprite.setRotation(trans.Rotation);
-			sprite.setScale(trans.Scale.X, trans.Scale.Y);
+			sprite.setPosition(trans.position.x, trans.position.y);
+			sprite.setRotation(trans.rotation);
+			sprite.setScale(trans.scale.x, trans.scale.y);
 
-			renderWindow.draw(sprite);
+			rw.draw(sprite);
 		}
 	}
-	renderWindow.display();
+	rw.display();
 }

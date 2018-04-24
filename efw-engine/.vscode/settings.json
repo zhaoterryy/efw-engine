@@ -28,7 +28,10 @@
         "new": "cpp",
         "stdexcept": "cpp",
         "typeinfo": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "ios": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }
