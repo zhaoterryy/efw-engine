@@ -27,6 +27,9 @@ public:
 
 	// adds new lua component and then returns it
 	LuaComponent& Lua_NewComponent();
+	FTransform GetRelativeTransform();
+	void SetRelativeTransform(const FTransform transform);
+	FTransform GetWorldTransform();
 
 	SceneObject* GetParent() { return parent; }
 	void SetParent(SceneObject* inObj);

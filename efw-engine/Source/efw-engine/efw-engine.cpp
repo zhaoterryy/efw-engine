@@ -3,7 +3,7 @@
 
 int main()
 {
-	GEngine::Get().Initialize("main");
+	GEngine::Get().Initialize();
 	GEngine::Get().StartGameLoop();
 
 	return 0;

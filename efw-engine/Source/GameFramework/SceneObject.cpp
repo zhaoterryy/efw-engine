@@ -20,6 +20,21 @@ void SceneObject::Tick(float deltaTime)
 
 }
 
+FTransform SceneObject::GetRelativeTransform()
+{
+	return GetComponent<TransformComponent>()->GetRelativeTransform();
+}
+
+void SceneObject::SetRelativeTransform(const FTransform transform)
+{
+	GetComponent<TransformComponent>()->SetRelativeTransform(transform);
+}
+
+FTransform SceneObject::GetWorldTransform()
+{
+	return GetComponent<TransformComponent>()->GetWorldTransform();
+}
+
 void SceneObject::SetParent(SceneObject* inObj)
 {
 	parent = inObj;
