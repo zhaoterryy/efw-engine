@@ -156,6 +156,7 @@
     <ClCompile Include="..\GameFramework\SceneObject.cpp" />
     <ClCompile Include="..\GameFramework\Scene.cpp" />
     <ClCompile Include="..\System\Application.cpp" />
+    <ClCompile Include="..\System\LuaConfig.cpp" />
     <ClCompile Include="..\System\Renderer.cpp" />
     <ClCompile Include="..\System\Resource.cpp" />
     <ClCompile Include="..\System\ResourceManager.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="..\GameFramework\SceneObject.h" />
     <ClInclude Include="..\GameFramework\Scene.h" />
     <ClInclude Include="..\System\Application.h" />
+    <ClInclude Include="..\System\LuaConfig.h" />
     <ClInclude Include="..\System\Renderer.h" />
     <ClInclude Include="..\System\Resource.h" />
     <ClInclude Include="..\System\ResourceManager.h" />

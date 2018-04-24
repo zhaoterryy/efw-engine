@@ -63,6 +63,9 @@
     <ClCompile Include="..\GameFramework\Component\RenderComponent.cpp">
       <Filter>GameFramework\Component</Filter>
     </ClCompile>
+    <ClCompile Include="..\System\LuaConfig.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\GameFramework\Object.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\GameFramework\Component\RenderComponent.h">
       <Filter>GameFramework\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\LuaConfig.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
